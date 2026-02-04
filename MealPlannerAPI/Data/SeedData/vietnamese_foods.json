@@ -1,0 +1,2109 @@
+{
+    "description": "Danh sách nguyên liệu thực phẩm Việt Nam và quốc tế phổ biến",
+    "version": "2.0",
+    "lastUpdated": "2026-01-11",
+    "totalItems": 200,
+    "categories": [
+        {
+            "name": "Thịt",
+            "items": [
+                {
+                    "name": "Ức gà",
+                    "price": 85000,
+                    "unit": "kg",
+                    "calories": 165,
+                    "protein": 31,
+                    "carbs": 0,
+                    "fat": 3.6,
+                    "keywords": "ức gà, chicken breast, thịt gà"
+                },
+                {
+                    "name": "Đùi gà",
+                    "price": 75000,
+                    "unit": "kg",
+                    "calories": 177,
+                    "protein": 26,
+                    "carbs": 0,
+                    "fat": 8,
+                    "keywords": "đùi gà, chicken thigh"
+                },
+                {
+                    "name": "Cánh gà",
+                    "price": 70000,
+                    "unit": "kg",
+                    "calories": 203,
+                    "protein": 18,
+                    "carbs": 0,
+                    "fat": 14,
+                    "keywords": "cánh gà, chicken wings"
+                },
+                {
+                    "name": "Gà nguyên con",
+                    "price": 95000,
+                    "unit": "kg",
+                    "calories": 239,
+                    "protein": 27,
+                    "carbs": 0,
+                    "fat": 14,
+                    "keywords": "gà nguyên con, whole chicken"
+                },
+                {
+                    "name": "Thịt bò thăn",
+                    "price": 280000,
+                    "unit": "kg",
+                    "calories": 250,
+                    "protein": 26,
+                    "carbs": 0,
+                    "fat": 15,
+                    "keywords": "thịt bò thăn, beef tenderloin"
+                },
+                {
+                    "name": "Thịt bò bắp",
+                    "price": 220000,
+                    "unit": "kg",
+                    "calories": 217,
+                    "protein": 28,
+                    "carbs": 0,
+                    "fat": 11,
+                    "keywords": "bò bắp, beef shank"
+                },
+                {
+                    "name": "Thịt bò xay",
+                    "price": 180000,
+                    "unit": "kg",
+                    "calories": 254,
+                    "protein": 17,
+                    "carbs": 0,
+                    "fat": 20,
+                    "keywords": "bò xay, ground beef"
+                },
+                {
+                    "name": "Bò Wagyu",
+                    "price": 1500000,
+                    "unit": "kg",
+                    "calories": 350,
+                    "protein": 22,
+                    "carbs": 0,
+                    "fat": 28,
+                    "keywords": "wagyu, bò Nhật"
+                },
+                {
+                    "name": "Thịt heo nạc vai",
+                    "price": 120000,
+                    "unit": "kg",
+                    "calories": 143,
+                    "protein": 26,
+                    "carbs": 0,
+                    "fat": 4,
+                    "keywords": "thịt heo, pork shoulder"
+                },
+                {
+                    "name": "Thịt ba rọi heo",
+                    "price": 130000,
+                    "unit": "kg",
+                    "calories": 518,
+                    "protein": 9,
+                    "carbs": 0,
+                    "fat": 53,
+                    "keywords": "ba rọi, pork belly"
+                },
+                {
+                    "name": "Sườn heo",
+                    "price": 140000,
+                    "unit": "kg",
+                    "calories": 277,
+                    "protein": 20,
+                    "carbs": 0,
+                    "fat": 21,
+                    "keywords": "sườn heo, pork ribs"
+                },
+                {
+                    "name": "Thịt heo xay",
+                    "price": 100000,
+                    "unit": "kg",
+                    "calories": 263,
+                    "protein": 17,
+                    "carbs": 0,
+                    "fat": 21,
+                    "keywords": "heo xay, ground pork"
+                },
+                {
+                    "name": "Thịt vịt",
+                    "price": 95000,
+                    "unit": "kg",
+                    "calories": 337,
+                    "protein": 19,
+                    "carbs": 0,
+                    "fat": 28,
+                    "keywords": "thịt vịt, duck"
+                },
+                {
+                    "name": "Giò lụa",
+                    "price": 180000,
+                    "unit": "kg",
+                    "calories": 150,
+                    "protein": 15,
+                    "carbs": 3,
+                    "fat": 9,
+                    "keywords": "giò lụa, chả lụa"
+                },
+                {
+                    "name": "Chả cá",
+                    "price": 120000,
+                    "unit": "kg",
+                    "calories": 130,
+                    "protein": 16,
+                    "carbs": 5,
+                    "fat": 5,
+                    "keywords": "chả cá, fish cake"
+                },
+                {
+                    "name": "Xúc xích",
+                    "price": 150000,
+                    "unit": "kg",
+                    "calories": 301,
+                    "protein": 12,
+                    "carbs": 2,
+                    "fat": 27,
+                    "keywords": "xúc xích, sausage"
+                },
+                {
+                    "name": "Bacon",
+                    "price": 250000,
+                    "unit": "kg",
+                    "calories": 541,
+                    "protein": 37,
+                    "carbs": 1,
+                    "fat": 42,
+                    "keywords": "bacon, thịt xông khói"
+                },
+                {
+                    "name": "Jambon",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 145,
+                    "protein": 21,
+                    "carbs": 1,
+                    "fat": 6,
+                    "keywords": "jambon, ham, giăm bông"
+                },
+                {
+                    "name": "Thịt cừu",
+                    "price": 350000,
+                    "unit": "kg",
+                    "calories": 294,
+                    "protein": 25,
+                    "carbs": 0,
+                    "fat": 21,
+                    "keywords": "thịt cừu, lamb"
+                },
+                {
+                    "name": "Thịt dê",
+                    "price": 300000,
+                    "unit": "kg",
+                    "calories": 143,
+                    "protein": 27,
+                    "carbs": 0,
+                    "fat": 3,
+                    "keywords": "thịt dê, goat meat"
+                }
+            ]
+        },
+        {
+            "name": "Hải sản",
+            "items": [
+                {
+                    "name": "Cá hồi phi lê",
+                    "price": 350000,
+                    "unit": "kg",
+                    "calories": 208,
+                    "protein": 20,
+                    "carbs": 0,
+                    "fat": 13,
+                    "keywords": "cá hồi, salmon"
+                },
+                {
+                    "name": "Cá hồi nguyên con",
+                    "price": 300000,
+                    "unit": "kg",
+                    "calories": 208,
+                    "protein": 20,
+                    "carbs": 0,
+                    "fat": 13,
+                    "keywords": "cá hồi, whole salmon"
+                },
+                {
+                    "name": "Cá basa phi lê",
+                    "price": 85000,
+                    "unit": "kg",
+                    "calories": 105,
+                    "protein": 19,
+                    "carbs": 0,
+                    "fat": 3,
+                    "keywords": "cá basa, basa fish"
+                },
+                {
+                    "name": "Cá thu",
+                    "price": 150000,
+                    "unit": "kg",
+                    "calories": 205,
+                    "protein": 19,
+                    "carbs": 0,
+                    "fat": 14,
+                    "keywords": "cá thu, mackerel"
+                },
+                {
+                    "name": "Cá điêu hồng",
+                    "price": 90000,
+                    "unit": "kg",
+                    "calories": 96,
+                    "protein": 20,
+                    "carbs": 0,
+                    "fat": 2,
+                    "keywords": "cá điêu hồng, tilapia"
+                },
+                {
+                    "name": "Cá rô phi",
+                    "price": 70000,
+                    "unit": "kg",
+                    "calories": 128,
+                    "protein": 26,
+                    "carbs": 0,
+                    "fat": 2.6,
+                    "keywords": "cá rô phi"
+                },
+                {
+                    "name": "Cá ngừ",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 132,
+                    "protein": 28,
+                    "carbs": 0,
+                    "fat": 1,
+                    "keywords": "cá ngừ, tuna"
+                },
+                {
+                    "name": "Cá tuyết",
+                    "price": 280000,
+                    "unit": "kg",
+                    "calories": 82,
+                    "protein": 18,
+                    "carbs": 0,
+                    "fat": 0.7,
+                    "keywords": "cá tuyết, cod"
+                },
+                {
+                    "name": "Cá chép",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 127,
+                    "protein": 18,
+                    "carbs": 0,
+                    "fat": 6,
+                    "keywords": "cá chép, carp"
+                },
+                {
+                    "name": "Tôm sú",
+                    "price": 250000,
+                    "unit": "kg",
+                    "calories": 99,
+                    "protein": 24,
+                    "carbs": 0,
+                    "fat": 0.3,
+                    "keywords": "tôm sú, black tiger shrimp"
+                },
+                {
+                    "name": "Tôm thẻ",
+                    "price": 180000,
+                    "unit": "kg",
+                    "calories": 85,
+                    "protein": 20,
+                    "carbs": 0,
+                    "fat": 0.5,
+                    "keywords": "tôm thẻ, whiteleg shrimp"
+                },
+                {
+                    "name": "Tôm hùm",
+                    "price": 800000,
+                    "unit": "kg",
+                    "calories": 89,
+                    "protein": 19,
+                    "carbs": 0,
+                    "fat": 0.9,
+                    "keywords": "tôm hùm, lobster"
+                },
+                {
+                    "name": "Mực ống",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 92,
+                    "protein": 18,
+                    "carbs": 3,
+                    "fat": 1.4,
+                    "keywords": "mực ống, squid"
+                },
+                {
+                    "name": "Mực lá",
+                    "price": 220000,
+                    "unit": "kg",
+                    "calories": 92,
+                    "protein": 18,
+                    "carbs": 3,
+                    "fat": 1.4,
+                    "keywords": "mực lá, cuttlefish"
+                },
+                {
+                    "name": "Bạch tuộc",
+                    "price": 250000,
+                    "unit": "kg",
+                    "calories": 82,
+                    "protein": 15,
+                    "carbs": 2,
+                    "fat": 1,
+                    "keywords": "bạch tuộc, octopus"
+                },
+                {
+                    "name": "Nghêu",
+                    "price": 60000,
+                    "unit": "kg",
+                    "calories": 86,
+                    "protein": 15,
+                    "carbs": 4,
+                    "fat": 1,
+                    "keywords": "nghêu, clam"
+                },
+                {
+                    "name": "Sò điệp",
+                    "price": 350000,
+                    "unit": "kg",
+                    "calories": 88,
+                    "protein": 17,
+                    "carbs": 3,
+                    "fat": 0.8,
+                    "keywords": "sò điệp, scallop"
+                },
+                {
+                    "name": "Hàu",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 68,
+                    "protein": 7,
+                    "carbs": 4,
+                    "fat": 2.5,
+                    "keywords": "hàu, oyster"
+                },
+                {
+                    "name": "Cua biển",
+                    "price": 400000,
+                    "unit": "kg",
+                    "calories": 97,
+                    "protein": 19,
+                    "carbs": 0,
+                    "fat": 1.5,
+                    "keywords": "cua biển, crab"
+                },
+                {
+                    "name": "Ốc hương",
+                    "price": 300000,
+                    "unit": "kg",
+                    "calories": 90,
+                    "protein": 18,
+                    "carbs": 2,
+                    "fat": 1,
+                    "keywords": "ốc hương, sea snail"
+                }
+            ]
+        },
+        {
+            "name": "Rau củ",
+            "items": [
+                {
+                    "name": "Bông cải xanh",
+                    "price": 45000,
+                    "unit": "kg",
+                    "calories": 34,
+                    "protein": 2.8,
+                    "carbs": 7,
+                    "fat": 0.4,
+                    "keywords": "bông cải xanh, broccoli"
+                },
+                {
+                    "name": "Bông cải trắng",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 25,
+                    "protein": 2,
+                    "carbs": 5,
+                    "fat": 0.3,
+                    "keywords": "bông cải trắng, cauliflower"
+                },
+                {
+                    "name": "Cà chua",
+                    "price": 30000,
+                    "unit": "kg",
+                    "calories": 18,
+                    "protein": 0.9,
+                    "carbs": 3.9,
+                    "fat": 0.2,
+                    "keywords": "cà chua, tomato"
+                },
+                {
+                    "name": "Cà rốt",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 41,
+                    "protein": 0.9,
+                    "carbs": 10,
+                    "fat": 0.2,
+                    "keywords": "cà rốt, carrot"
+                },
+                {
+                    "name": "Khoai tây",
+                    "price": 30000,
+                    "unit": "kg",
+                    "calories": 77,
+                    "protein": 2,
+                    "carbs": 17,
+                    "fat": 0.1,
+                    "keywords": "khoai tây, potato"
+                },
+                {
+                    "name": "Khoai lang",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 86,
+                    "protein": 1.6,
+                    "carbs": 20,
+                    "fat": 0.1,
+                    "keywords": "khoai lang, sweet potato"
+                },
+                {
+                    "name": "Khoai môn",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 112,
+                    "protein": 1.5,
+                    "carbs": 26,
+                    "fat": 0.1,
+                    "keywords": "khoai môn, taro"
+                },
+                {
+                    "name": "Bí đỏ",
+                    "price": 20000,
+                    "unit": "kg",
+                    "calories": 26,
+                    "protein": 1,
+                    "carbs": 6.5,
+                    "fat": 0.1,
+                    "keywords": "bí đỏ, pumpkin"
+                },
+                {
+                    "name": "Bí xanh",
+                    "price": 18000,
+                    "unit": "kg",
+                    "calories": 12,
+                    "protein": 0.6,
+                    "carbs": 3,
+                    "fat": 0.2,
+                    "keywords": "bí xanh, winter melon"
+                },
+                {
+                    "name": "Mướp",
+                    "price": 20000,
+                    "unit": "kg",
+                    "calories": 20,
+                    "protein": 0.6,
+                    "carbs": 4.4,
+                    "fat": 0.1,
+                    "keywords": "mướp, luffa"
+                },
+                {
+                    "name": "Dưa leo",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 16,
+                    "protein": 0.7,
+                    "carbs": 3.6,
+                    "fat": 0.1,
+                    "keywords": "dưa leo, cucumber"
+                },
+                {
+                    "name": "Rau muống",
+                    "price": 15000,
+                    "unit": "kg",
+                    "calories": 19,
+                    "protein": 2.6,
+                    "carbs": 3,
+                    "fat": 0.2,
+                    "keywords": "rau muống, water spinach"
+                },
+                {
+                    "name": "Cải ngọt",
+                    "price": 20000,
+                    "unit": "kg",
+                    "calories": 13,
+                    "protein": 1.5,
+                    "carbs": 2.2,
+                    "fat": 0.2,
+                    "keywords": "cải ngọt, choy sum"
+                },
+                {
+                    "name": "Cải thìa",
+                    "price": 22000,
+                    "unit": "kg",
+                    "calories": 13,
+                    "protein": 1.5,
+                    "carbs": 2.2,
+                    "fat": 0.2,
+                    "keywords": "cải thìa, bok choy"
+                },
+                {
+                    "name": "Cải bắp",
+                    "price": 18000,
+                    "unit": "kg",
+                    "calories": 25,
+                    "protein": 1.3,
+                    "carbs": 5.8,
+                    "fat": 0.1,
+                    "keywords": "cải bắp, cabbage"
+                },
+                {
+                    "name": "Cải xoăn Kale",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 49,
+                    "protein": 4.3,
+                    "carbs": 9,
+                    "fat": 0.9,
+                    "keywords": "cải xoăn, kale"
+                },
+                {
+                    "name": "Xà lách",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 15,
+                    "protein": 1.4,
+                    "carbs": 2.9,
+                    "fat": 0.2,
+                    "keywords": "xà lách, lettuce"
+                },
+                {
+                    "name": "Rau mồng tơi",
+                    "price": 18000,
+                    "unit": "kg",
+                    "calories": 19,
+                    "protein": 1.8,
+                    "carbs": 3.4,
+                    "fat": 0.3,
+                    "keywords": "mồng tơi, malabar spinach"
+                },
+                {
+                    "name": "Rau dền",
+                    "price": 15000,
+                    "unit": "kg",
+                    "calories": 23,
+                    "protein": 2.5,
+                    "carbs": 4,
+                    "fat": 0.3,
+                    "keywords": "rau dền, amaranth"
+                },
+                {
+                    "name": "Rau cải bó xôi",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 23,
+                    "protein": 2.9,
+                    "carbs": 3.6,
+                    "fat": 0.4,
+                    "keywords": "cải bó xôi, spinach"
+                },
+                {
+                    "name": "Đậu que",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 31,
+                    "protein": 1.8,
+                    "carbs": 7,
+                    "fat": 0.1,
+                    "keywords": "đậu que, green beans"
+                },
+                {
+                    "name": "Đậu Hà Lan",
+                    "price": 60000,
+                    "unit": "kg",
+                    "calories": 81,
+                    "protein": 5.4,
+                    "carbs": 14,
+                    "fat": 0.4,
+                    "keywords": "đậu Hà Lan, green peas"
+                },
+                {
+                    "name": "Đậu bắp",
+                    "price": 30000,
+                    "unit": "kg",
+                    "calories": 33,
+                    "protein": 2,
+                    "carbs": 7,
+                    "fat": 0.2,
+                    "keywords": "đậu bắp, okra"
+                },
+                {
+                    "name": "Ớt chuông",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 31,
+                    "protein": 1,
+                    "carbs": 6,
+                    "fat": 0.3,
+                    "keywords": "ớt chuông, bell pepper"
+                },
+                {
+                    "name": "Cà tím",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 25,
+                    "protein": 1,
+                    "carbs": 6,
+                    "fat": 0.2,
+                    "keywords": "cà tím, eggplant"
+                },
+                {
+                    "name": "Bắp ngô",
+                    "price": 20000,
+                    "unit": "kg",
+                    "calories": 86,
+                    "protein": 3.3,
+                    "carbs": 19,
+                    "fat": 1.4,
+                    "keywords": "bắp ngô, corn"
+                },
+                {
+                    "name": "Nấm rơm",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 35,
+                    "protein": 3.8,
+                    "carbs": 4,
+                    "fat": 0.3,
+                    "keywords": "nấm rơm, straw mushroom"
+                },
+                {
+                    "name": "Nấm đùi gà",
+                    "price": 90000,
+                    "unit": "kg",
+                    "calories": 33,
+                    "protein": 3.3,
+                    "carbs": 6.1,
+                    "fat": 0.4,
+                    "keywords": "nấm đùi gà, king oyster"
+                },
+                {
+                    "name": "Nấm kim châm",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 37,
+                    "protein": 2.7,
+                    "carbs": 7.8,
+                    "fat": 0.4,
+                    "keywords": "nấm kim châm, enoki"
+                },
+                {
+                    "name": "Nấm hương",
+                    "price": 120000,
+                    "unit": "kg",
+                    "calories": 34,
+                    "protein": 2.2,
+                    "carbs": 6.8,
+                    "fat": 0.5,
+                    "keywords": "nấm hương, shiitake"
+                },
+                {
+                    "name": "Nấm mèo",
+                    "price": 100000,
+                    "unit": "kg",
+                    "calories": 38,
+                    "protein": 0.5,
+                    "carbs": 7,
+                    "fat": 0.1,
+                    "keywords": "nấm mèo, wood ear"
+                },
+                {
+                    "name": "Nấm Portobello",
+                    "price": 150000,
+                    "unit": "kg",
+                    "calories": 22,
+                    "protein": 2.1,
+                    "carbs": 3.9,
+                    "fat": 0.4,
+                    "keywords": "nấm Portobello"
+                },
+                {
+                    "name": "Giá đỗ",
+                    "price": 15000,
+                    "unit": "kg",
+                    "calories": 31,
+                    "protein": 3.1,
+                    "carbs": 6,
+                    "fat": 0.2,
+                    "keywords": "giá đỗ, bean sprouts"
+                },
+                {
+                    "name": "Măng tươi",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 27,
+                    "protein": 2.6,
+                    "carbs": 5.2,
+                    "fat": 0.3,
+                    "keywords": "măng, bamboo shoots"
+                },
+                {
+                    "name": "Măng tây",
+                    "price": 120000,
+                    "unit": "kg",
+                    "calories": 20,
+                    "protein": 2.2,
+                    "carbs": 3.9,
+                    "fat": 0.1,
+                    "keywords": "măng tây, asparagus"
+                },
+                {
+                    "name": "Củ cải trắng",
+                    "price": 20000,
+                    "unit": "kg",
+                    "calories": 18,
+                    "protein": 0.7,
+                    "carbs": 4,
+                    "fat": 0.1,
+                    "keywords": "củ cải trắng, daikon"
+                },
+                {
+                    "name": "Củ cải đỏ",
+                    "price": 45000,
+                    "unit": "kg",
+                    "calories": 43,
+                    "protein": 1.6,
+                    "carbs": 10,
+                    "fat": 0.2,
+                    "keywords": "củ cải đỏ, beetroot"
+                },
+                {
+                    "name": "Củ sen",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 74,
+                    "protein": 2.6,
+                    "carbs": 16,
+                    "fat": 0.1,
+                    "keywords": "củ sen, lotus root"
+                },
+                {
+                    "name": "Atiso",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 47,
+                    "protein": 3.3,
+                    "carbs": 11,
+                    "fat": 0.2,
+                    "keywords": "atiso, artichoke"
+                },
+                {
+                    "name": "Bông atiso",
+                    "price": 100000,
+                    "unit": "kg",
+                    "calories": 47,
+                    "protein": 3.3,
+                    "carbs": 11,
+                    "fat": 0.2,
+                    "keywords": "bông atiso"
+                }
+            ]
+        },
+        {
+            "name": "Trái cây",
+            "items": [
+                {
+                    "name": "Chuối",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 89,
+                    "protein": 1.1,
+                    "carbs": 23,
+                    "fat": 0.3,
+                    "keywords": "chuối, banana"
+                },
+                {
+                    "name": "Táo Fuji",
+                    "price": 60000,
+                    "unit": "kg",
+                    "calories": 52,
+                    "protein": 0.3,
+                    "carbs": 14,
+                    "fat": 0.2,
+                    "keywords": "táo, apple"
+                },
+                {
+                    "name": "Cam",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 47,
+                    "protein": 0.9,
+                    "carbs": 12,
+                    "fat": 0.1,
+                    "keywords": "cam, orange"
+                },
+                {
+                    "name": "Quýt",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 53,
+                    "protein": 0.8,
+                    "carbs": 13,
+                    "fat": 0.3,
+                    "keywords": "quýt, mandarin"
+                },
+                {
+                    "name": "Bưởi",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 42,
+                    "protein": 0.8,
+                    "carbs": 11,
+                    "fat": 0.1,
+                    "keywords": "bưởi, pomelo"
+                },
+                {
+                    "name": "Chanh",
+                    "price": 30000,
+                    "unit": "kg",
+                    "calories": 29,
+                    "protein": 1.1,
+                    "carbs": 9,
+                    "fat": 0.3,
+                    "keywords": "chanh, lime, lemon"
+                },
+                {
+                    "name": "Xoài",
+                    "price": 45000,
+                    "unit": "kg",
+                    "calories": 60,
+                    "protein": 0.8,
+                    "carbs": 15,
+                    "fat": 0.4,
+                    "keywords": "xoài, mango"
+                },
+                {
+                    "name": "Đu đủ",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 43,
+                    "protein": 0.5,
+                    "carbs": 11,
+                    "fat": 0.3,
+                    "keywords": "đu đủ, papaya"
+                },
+                {
+                    "name": "Dưa hấu",
+                    "price": 20000,
+                    "unit": "kg",
+                    "calories": 30,
+                    "protein": 0.6,
+                    "carbs": 8,
+                    "fat": 0.2,
+                    "keywords": "dưa hấu, watermelon"
+                },
+                {
+                    "name": "Dưa lưới",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 34,
+                    "protein": 0.8,
+                    "carbs": 8,
+                    "fat": 0.2,
+                    "keywords": "dưa lưới, cantaloupe"
+                },
+                {
+                    "name": "Thanh long",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 50,
+                    "protein": 1.1,
+                    "carbs": 11,
+                    "fat": 0.4,
+                    "keywords": "thanh long, dragon fruit"
+                },
+                {
+                    "name": "Bơ",
+                    "price": 70000,
+                    "unit": "kg",
+                    "calories": 160,
+                    "protein": 2,
+                    "carbs": 9,
+                    "fat": 15,
+                    "keywords": "bơ, avocado"
+                },
+                {
+                    "name": "Nho",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 69,
+                    "protein": 0.7,
+                    "carbs": 18,
+                    "fat": 0.2,
+                    "keywords": "nho, grape"
+                },
+                {
+                    "name": "Lê",
+                    "price": 55000,
+                    "unit": "kg",
+                    "calories": 57,
+                    "protein": 0.4,
+                    "carbs": 15,
+                    "fat": 0.1,
+                    "keywords": "lê, pear"
+                },
+                {
+                    "name": "Kiwi",
+                    "price": 120000,
+                    "unit": "kg",
+                    "calories": 61,
+                    "protein": 1.1,
+                    "carbs": 15,
+                    "fat": 0.5,
+                    "keywords": "kiwi"
+                },
+                {
+                    "name": "Dâu tây",
+                    "price": 150000,
+                    "unit": "kg",
+                    "calories": 32,
+                    "protein": 0.7,
+                    "carbs": 8,
+                    "fat": 0.3,
+                    "keywords": "dâu tây, strawberry"
+                },
+                {
+                    "name": "Việt quất",
+                    "price": 300000,
+                    "unit": "kg",
+                    "calories": 57,
+                    "protein": 0.7,
+                    "carbs": 14,
+                    "fat": 0.3,
+                    "keywords": "việt quất, blueberry"
+                },
+                {
+                    "name": "Mâm xôi",
+                    "price": 350000,
+                    "unit": "kg",
+                    "calories": 52,
+                    "protein": 1.2,
+                    "carbs": 12,
+                    "fat": 0.7,
+                    "keywords": "mâm xôi, raspberry"
+                },
+                {
+                    "name": "Cherry",
+                    "price": 400000,
+                    "unit": "kg",
+                    "calories": 63,
+                    "protein": 1.1,
+                    "carbs": 16,
+                    "fat": 0.2,
+                    "keywords": "cherry, anh đào"
+                },
+                {
+                    "name": "Đào",
+                    "price": 100000,
+                    "unit": "kg",
+                    "calories": 39,
+                    "protein": 0.9,
+                    "carbs": 10,
+                    "fat": 0.3,
+                    "keywords": "đào, peach"
+                },
+                {
+                    "name": "Mận",
+                    "price": 60000,
+                    "unit": "kg",
+                    "calories": 46,
+                    "protein": 0.7,
+                    "carbs": 11,
+                    "fat": 0.3,
+                    "keywords": "mận, plum"
+                },
+                {
+                    "name": "Sầu riêng",
+                    "price": 150000,
+                    "unit": "kg",
+                    "calories": 147,
+                    "protein": 1.5,
+                    "carbs": 27,
+                    "fat": 5,
+                    "keywords": "sầu riêng, durian"
+                },
+                {
+                    "name": "Chôm chôm",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 68,
+                    "protein": 0.7,
+                    "carbs": 16,
+                    "fat": 0.2,
+                    "keywords": "chôm chôm, rambutan"
+                },
+                {
+                    "name": "Nhãn",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 60,
+                    "protein": 1.3,
+                    "carbs": 15,
+                    "fat": 0.1,
+                    "keywords": "nhãn, longan"
+                },
+                {
+                    "name": "Vải thiều",
+                    "price": 60000,
+                    "unit": "kg",
+                    "calories": 66,
+                    "protein": 0.8,
+                    "carbs": 17,
+                    "fat": 0.4,
+                    "keywords": "vải, lychee"
+                },
+                {
+                    "name": "Dứa",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 50,
+                    "protein": 0.5,
+                    "carbs": 13,
+                    "fat": 0.1,
+                    "keywords": "dứa, thơm, pineapple"
+                },
+                {
+                    "name": "Ổi",
+                    "price": 30000,
+                    "unit": "kg",
+                    "calories": 68,
+                    "protein": 2.6,
+                    "carbs": 14,
+                    "fat": 1,
+                    "keywords": "ổi, guava"
+                },
+                {
+                    "name": "Mít",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 95,
+                    "protein": 1.7,
+                    "carbs": 23,
+                    "fat": 0.6,
+                    "keywords": "mít, jackfruit"
+                }
+            ]
+        },
+        {
+            "name": "Tinh bột",
+            "items": [
+                {
+                    "name": "Gạo trắng",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 130,
+                    "protein": 2.7,
+                    "carbs": 28,
+                    "fat": 0.3,
+                    "keywords": "gạo, rice, cơm"
+                },
+                {
+                    "name": "Gạo lứt",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 111,
+                    "protein": 2.6,
+                    "carbs": 23,
+                    "fat": 0.9,
+                    "keywords": "gạo lứt, brown rice"
+                },
+                {
+                    "name": "Gạo nếp",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 97,
+                    "protein": 2,
+                    "carbs": 21,
+                    "fat": 0.2,
+                    "keywords": "gạo nếp, sticky rice"
+                },
+                {
+                    "name": "Gạo Japonica",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 130,
+                    "protein": 2.7,
+                    "carbs": 28,
+                    "fat": 0.3,
+                    "keywords": "gạo Nhật, sushi rice"
+                },
+                {
+                    "name": "Yến mạch",
+                    "price": 100000,
+                    "unit": "kg",
+                    "calories": 389,
+                    "protein": 17,
+                    "carbs": 66,
+                    "fat": 7,
+                    "keywords": "yến mạch, oats"
+                },
+                {
+                    "name": "Quinoa",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 368,
+                    "protein": 14,
+                    "carbs": 64,
+                    "fat": 6,
+                    "keywords": "quinoa, hạt diêm mạch"
+                },
+                {
+                    "name": "Bún tươi",
+                    "price": 20000,
+                    "unit": "kg",
+                    "calories": 109,
+                    "protein": 0.9,
+                    "carbs": 25,
+                    "fat": 0.2,
+                    "keywords": "bún, rice vermicelli"
+                },
+                {
+                    "name": "Phở khô",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 364,
+                    "protein": 3.4,
+                    "carbs": 82,
+                    "fat": 0.6,
+                    "keywords": "phở, rice noodle"
+                },
+                {
+                    "name": "Mì sợi",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 138,
+                    "protein": 5,
+                    "carbs": 26,
+                    "fat": 1,
+                    "keywords": "mì, noodle"
+                },
+                {
+                    "name": "Mì Ý Spaghetti",
+                    "price": 60000,
+                    "unit": "kg",
+                    "calories": 158,
+                    "protein": 6,
+                    "carbs": 31,
+                    "fat": 0.9,
+                    "keywords": "spaghetti, pasta, mì Ý"
+                },
+                {
+                    "name": "Mì Penne",
+                    "price": 60000,
+                    "unit": "kg",
+                    "calories": 158,
+                    "protein": 6,
+                    "carbs": 31,
+                    "fat": 0.9,
+                    "keywords": "penne, pasta"
+                },
+                {
+                    "name": "Mì Fusilli",
+                    "price": 60000,
+                    "unit": "kg",
+                    "calories": 158,
+                    "protein": 6,
+                    "carbs": 31,
+                    "fat": 0.9,
+                    "keywords": "fusilli, pasta"
+                },
+                {
+                    "name": "Miến dong",
+                    "price": 60000,
+                    "unit": "kg",
+                    "calories": 334,
+                    "protein": 0.1,
+                    "carbs": 83,
+                    "fat": 0,
+                    "keywords": "miến, glass noodle"
+                },
+                {
+                    "name": "Bánh mì",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 265,
+                    "protein": 9,
+                    "carbs": 49,
+                    "fat": 3,
+                    "keywords": "bánh mì, bread"
+                },
+                {
+                    "name": "Bánh mì nguyên cám",
+                    "price": 70000,
+                    "unit": "kg",
+                    "calories": 247,
+                    "protein": 13,
+                    "carbs": 41,
+                    "fat": 4,
+                    "keywords": "whole wheat bread"
+                },
+                {
+                    "name": "Bánh tráng",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 300,
+                    "protein": 1,
+                    "carbs": 73,
+                    "fat": 0.2,
+                    "keywords": "bánh tráng, rice paper"
+                },
+                {
+                    "name": "Bột mì",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 364,
+                    "protein": 10,
+                    "carbs": 76,
+                    "fat": 1,
+                    "keywords": "bột mì, wheat flour"
+                },
+                {
+                    "name": "Bột gạo",
+                    "price": 30000,
+                    "unit": "kg",
+                    "calories": 366,
+                    "protein": 6,
+                    "carbs": 80,
+                    "fat": 1,
+                    "keywords": "bột gạo, rice flour"
+                },
+                {
+                    "name": "Khoai mì",
+                    "price": 20000,
+                    "unit": "kg",
+                    "calories": 160,
+                    "protein": 1.4,
+                    "carbs": 38,
+                    "fat": 0.3,
+                    "keywords": "khoai mì, sắn, cassava"
+                },
+                {
+                    "name": "Bột năng",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 358,
+                    "protein": 0.2,
+                    "carbs": 88,
+                    "fat": 0,
+                    "keywords": "bột năng, tapioca starch"
+                }
+            ]
+        },
+        {
+            "name": "Đậu & Hạt",
+            "items": [
+                {
+                    "name": "Đậu phụ",
+                    "price": 30000,
+                    "unit": "kg",
+                    "calories": 76,
+                    "protein": 8,
+                    "carbs": 2,
+                    "fat": 4.8,
+                    "keywords": "đậu phụ, tofu"
+                },
+                {
+                    "name": "Đậu phụ non",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 55,
+                    "protein": 5,
+                    "carbs": 2,
+                    "fat": 3,
+                    "keywords": "đậu phụ non, silken tofu"
+                },
+                {
+                    "name": "Đậu nành",
+                    "price": 35000,
+                    "unit": "kg",
+                    "calories": 446,
+                    "protein": 36,
+                    "carbs": 30,
+                    "fat": 20,
+                    "keywords": "đậu nành, soybean"
+                },
+                {
+                    "name": "Đậu đen",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 341,
+                    "protein": 21,
+                    "carbs": 63,
+                    "fat": 1.4,
+                    "keywords": "đậu đen, black bean"
+                },
+                {
+                    "name": "Đậu xanh",
+                    "price": 45000,
+                    "unit": "kg",
+                    "calories": 347,
+                    "protein": 24,
+                    "carbs": 63,
+                    "fat": 1.2,
+                    "keywords": "đậu xanh, mung bean"
+                },
+                {
+                    "name": "Đậu đỏ",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 337,
+                    "protein": 24,
+                    "carbs": 60,
+                    "fat": 1.1,
+                    "keywords": "đậu đỏ, red bean"
+                },
+                {
+                    "name": "Đậu lăng",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 352,
+                    "protein": 25,
+                    "carbs": 60,
+                    "fat": 1.1,
+                    "keywords": "đậu lăng, lentils"
+                },
+                {
+                    "name": "Đậu gà",
+                    "price": 70000,
+                    "unit": "kg",
+                    "calories": 364,
+                    "protein": 19,
+                    "carbs": 61,
+                    "fat": 6,
+                    "keywords": "đậu gà, chickpea"
+                },
+                {
+                    "name": "Hạt điều",
+                    "price": 300000,
+                    "unit": "kg",
+                    "calories": 553,
+                    "protein": 18,
+                    "carbs": 30,
+                    "fat": 44,
+                    "keywords": "hạt điều, cashew"
+                },
+                {
+                    "name": "Đậu phộng",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 567,
+                    "protein": 26,
+                    "carbs": 16,
+                    "fat": 49,
+                    "keywords": "đậu phộng, peanut"
+                },
+                {
+                    "name": "Hạt sen",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 89,
+                    "protein": 4.1,
+                    "carbs": 17,
+                    "fat": 0.5,
+                    "keywords": "hạt sen, lotus seed"
+                },
+                {
+                    "name": "Hạnh nhân",
+                    "price": 350000,
+                    "unit": "kg",
+                    "calories": 579,
+                    "protein": 21,
+                    "carbs": 22,
+                    "fat": 50,
+                    "keywords": "hạnh nhân, almond"
+                },
+                {
+                    "name": "Hạt óc chó",
+                    "price": 400000,
+                    "unit": "kg",
+                    "calories": 654,
+                    "protein": 15,
+                    "carbs": 14,
+                    "fat": 65,
+                    "keywords": "óc chó, walnut"
+                },
+                {
+                    "name": "Hạt macadamia",
+                    "price": 600000,
+                    "unit": "kg",
+                    "calories": 718,
+                    "protein": 8,
+                    "carbs": 14,
+                    "fat": 76,
+                    "keywords": "macadamia"
+                },
+                {
+                    "name": "Hạt chia",
+                    "price": 300000,
+                    "unit": "kg",
+                    "calories": 486,
+                    "protein": 17,
+                    "carbs": 42,
+                    "fat": 31,
+                    "keywords": "hạt chia, chia seeds"
+                },
+                {
+                    "name": "Hạt lanh",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 534,
+                    "protein": 18,
+                    "carbs": 29,
+                    "fat": 42,
+                    "keywords": "hạt lanh, flaxseed"
+                },
+                {
+                    "name": "Hạt bí",
+                    "price": 250000,
+                    "unit": "kg",
+                    "calories": 559,
+                    "protein": 30,
+                    "carbs": 11,
+                    "fat": 49,
+                    "keywords": "hạt bí, pumpkin seeds"
+                },
+                {
+                    "name": "Hạt hướng dương",
+                    "price": 150000,
+                    "unit": "kg",
+                    "calories": 584,
+                    "protein": 21,
+                    "carbs": 20,
+                    "fat": 51,
+                    "keywords": "hạt hướng dương, sunflower seeds"
+                },
+                {
+                    "name": "Hạt mè",
+                    "price": 120000,
+                    "unit": "kg",
+                    "calories": 573,
+                    "protein": 18,
+                    "carbs": 23,
+                    "fat": 50,
+                    "keywords": "hạt mè, sesame seeds"
+                },
+                {
+                    "name": "Hạt dẻ",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 213,
+                    "protein": 2.4,
+                    "carbs": 45,
+                    "fat": 2.2,
+                    "keywords": "hạt dẻ, chestnut"
+                }
+            ]
+        },
+        {
+            "name": "Trứng & Sữa",
+            "items": [
+                {
+                    "name": "Trứng gà",
+                    "price": 35000,
+                    "unit": "chục",
+                    "calories": 155,
+                    "protein": 13,
+                    "carbs": 1.1,
+                    "fat": 11,
+                    "keywords": "trứng gà, chicken egg"
+                },
+                {
+                    "name": "Trứng vịt",
+                    "price": 40000,
+                    "unit": "chục",
+                    "calories": 185,
+                    "protein": 13,
+                    "carbs": 1.5,
+                    "fat": 14,
+                    "keywords": "trứng vịt, duck egg"
+                },
+                {
+                    "name": "Trứng cút",
+                    "price": 30000,
+                    "unit": "chục",
+                    "calories": 158,
+                    "protein": 13,
+                    "carbs": 0.4,
+                    "fat": 11,
+                    "keywords": "trứng cút, quail egg"
+                },
+                {
+                    "name": "Sữa tươi",
+                    "price": 32000,
+                    "unit": "lít",
+                    "calories": 61,
+                    "protein": 3.2,
+                    "carbs": 4.8,
+                    "fat": 3.3,
+                    "keywords": "sữa tươi, fresh milk"
+                },
+                {
+                    "name": "Sữa tách béo",
+                    "price": 35000,
+                    "unit": "lít",
+                    "calories": 34,
+                    "protein": 3.4,
+                    "carbs": 5,
+                    "fat": 0.1,
+                    "keywords": "sữa tách béo, skim milk"
+                },
+                {
+                    "name": "Sữa chua",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 59,
+                    "protein": 10,
+                    "carbs": 3.6,
+                    "fat": 0.7,
+                    "keywords": "sữa chua, yogurt"
+                },
+                {
+                    "name": "Sữa chua Hy Lạp",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 97,
+                    "protein": 9,
+                    "carbs": 4,
+                    "fat": 5,
+                    "keywords": "Greek yogurt"
+                },
+                {
+                    "name": "Sữa đặc",
+                    "price": 35000,
+                    "unit": "hộp",
+                    "calories": 321,
+                    "protein": 8,
+                    "carbs": 54,
+                    "fat": 9,
+                    "keywords": "sữa đặc, condensed milk"
+                },
+                {
+                    "name": "Kem tươi",
+                    "price": 150000,
+                    "unit": "lít",
+                    "calories": 340,
+                    "protein": 2,
+                    "carbs": 4,
+                    "fat": 36,
+                    "keywords": "kem tươi, whipping cream"
+                },
+                {
+                    "name": "Phô mai Mozzarella",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 280,
+                    "protein": 28,
+                    "carbs": 3,
+                    "fat": 17,
+                    "keywords": "mozzarella"
+                },
+                {
+                    "name": "Phô mai Cheddar",
+                    "price": 250000,
+                    "unit": "kg",
+                    "calories": 403,
+                    "protein": 25,
+                    "carbs": 1,
+                    "fat": 33,
+                    "keywords": "cheddar cheese"
+                },
+                {
+                    "name": "Phô mai Parmesan",
+                    "price": 400000,
+                    "unit": "kg",
+                    "calories": 431,
+                    "protein": 38,
+                    "carbs": 4,
+                    "fat": 29,
+                    "keywords": "parmesan"
+                },
+                {
+                    "name": "Phô mai Feta",
+                    "price": 300000,
+                    "unit": "kg",
+                    "calories": 264,
+                    "protein": 14,
+                    "carbs": 4,
+                    "fat": 21,
+                    "keywords": "feta cheese"
+                },
+                {
+                    "name": "Bơ lạt",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 717,
+                    "protein": 0.9,
+                    "carbs": 0.1,
+                    "fat": 81,
+                    "keywords": "bơ, butter"
+                },
+                {
+                    "name": "Bơ mặn",
+                    "price": 180000,
+                    "unit": "kg",
+                    "calories": 717,
+                    "protein": 0.9,
+                    "carbs": 0.1,
+                    "fat": 81,
+                    "keywords": "salted butter"
+                },
+                {
+                    "name": "Sữa hạnh nhân",
+                    "price": 80000,
+                    "unit": "lít",
+                    "calories": 17,
+                    "protein": 0.6,
+                    "carbs": 0.6,
+                    "fat": 1.5,
+                    "keywords": "almond milk"
+                },
+                {
+                    "name": "Sữa đậu nành",
+                    "price": 30000,
+                    "unit": "lít",
+                    "calories": 54,
+                    "protein": 3.3,
+                    "carbs": 3.8,
+                    "fat": 1.8,
+                    "keywords": "sữa đậu nành, soy milk"
+                },
+                {
+                    "name": "Sữa yến mạch",
+                    "price": 70000,
+                    "unit": "lít",
+                    "calories": 47,
+                    "protein": 1,
+                    "carbs": 9,
+                    "fat": 0.5,
+                    "keywords": "oat milk"
+                }
+            ]
+        },
+        {
+            "name": "Gia vị",
+            "items": [
+                {
+                    "name": "Nước mắm",
+                    "price": 60000,
+                    "unit": "lít",
+                    "calories": 35,
+                    "protein": 6,
+                    "carbs": 2,
+                    "fat": 0,
+                    "keywords": "nước mắm, fish sauce"
+                },
+                {
+                    "name": "Xì dầu",
+                    "price": 40000,
+                    "unit": "lít",
+                    "calories": 53,
+                    "protein": 5,
+                    "carbs": 5,
+                    "fat": 0.1,
+                    "keywords": "xì dầu, soy sauce"
+                },
+                {
+                    "name": "Dầu ăn",
+                    "price": 40000,
+                    "unit": "lít",
+                    "calories": 884,
+                    "protein": 0,
+                    "carbs": 0,
+                    "fat": 100,
+                    "keywords": "dầu ăn, cooking oil"
+                },
+                {
+                    "name": "Dầu olive",
+                    "price": 200000,
+                    "unit": "lít",
+                    "calories": 884,
+                    "protein": 0,
+                    "carbs": 0,
+                    "fat": 100,
+                    "keywords": "dầu olive, olive oil"
+                },
+                {
+                    "name": "Dầu mè",
+                    "price": 100000,
+                    "unit": "lít",
+                    "calories": 884,
+                    "protein": 0,
+                    "carbs": 0,
+                    "fat": 100,
+                    "keywords": "dầu mè, sesame oil"
+                },
+                {
+                    "name": "Dầu hào",
+                    "price": 50000,
+                    "unit": "lít",
+                    "calories": 51,
+                    "protein": 1.4,
+                    "carbs": 11,
+                    "fat": 0,
+                    "keywords": "dầu hào, oyster sauce"
+                },
+                {
+                    "name": "Tỏi",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 149,
+                    "protein": 6.4,
+                    "carbs": 33,
+                    "fat": 0.5,
+                    "keywords": "tỏi, garlic"
+                },
+                {
+                    "name": "Gừng",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 80,
+                    "protein": 1.8,
+                    "carbs": 18,
+                    "fat": 0.8,
+                    "keywords": "gừng, ginger"
+                },
+                {
+                    "name": "Hành tím",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 40,
+                    "protein": 1.1,
+                    "carbs": 9,
+                    "fat": 0.1,
+                    "keywords": "hành tím, shallot"
+                },
+                {
+                    "name": "Hành tây",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 40,
+                    "protein": 1.1,
+                    "carbs": 9,
+                    "fat": 0.1,
+                    "keywords": "hành tây, onion"
+                },
+                {
+                    "name": "Hành lá",
+                    "price": 30000,
+                    "unit": "kg",
+                    "calories": 32,
+                    "protein": 1.8,
+                    "carbs": 7,
+                    "fat": 0.2,
+                    "keywords": "hành lá, scallion"
+                },
+                {
+                    "name": "Ớt tươi",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 40,
+                    "protein": 1.9,
+                    "carbs": 9,
+                    "fat": 0.4,
+                    "keywords": "ớt, chili"
+                },
+                {
+                    "name": "Sả",
+                    "price": 30000,
+                    "unit": "kg",
+                    "calories": 99,
+                    "protein": 1.8,
+                    "carbs": 25,
+                    "fat": 0.5,
+                    "keywords": "sả, lemongrass"
+                },
+                {
+                    "name": "Lá chanh",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 48,
+                    "protein": 1.8,
+                    "carbs": 11,
+                    "fat": 0.2,
+                    "keywords": "lá chanh, kaffir lime"
+                },
+                {
+                    "name": "Rau mùi",
+                    "price": 40000,
+                    "unit": "kg",
+                    "calories": 23,
+                    "protein": 2.1,
+                    "carbs": 4,
+                    "fat": 0.5,
+                    "keywords": "rau mùi, cilantro"
+                },
+                {
+                    "name": "Húng quế",
+                    "price": 45000,
+                    "unit": "kg",
+                    "calories": 23,
+                    "protein": 3.2,
+                    "carbs": 2.7,
+                    "fat": 0.6,
+                    "keywords": "húng quế, basil"
+                },
+                {
+                    "name": "Húng lủi",
+                    "price": 45000,
+                    "unit": "kg",
+                    "calories": 44,
+                    "protein": 3.3,
+                    "carbs": 8,
+                    "fat": 0.7,
+                    "keywords": "húng lủi, mint"
+                },
+                {
+                    "name": "Mùi tây",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 36,
+                    "protein": 3,
+                    "carbs": 6,
+                    "fat": 0.8,
+                    "keywords": "mùi tây, parsley"
+                },
+                {
+                    "name": "Thì là",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 43,
+                    "protein": 3.5,
+                    "carbs": 7,
+                    "fat": 1.1,
+                    "keywords": "thì là, dill"
+                },
+                {
+                    "name": "Hương thảo",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 131,
+                    "protein": 3.3,
+                    "carbs": 21,
+                    "fat": 5.9,
+                    "keywords": "hương thảo, rosemary"
+                },
+                {
+                    "name": "Oregano",
+                    "price": 100000,
+                    "unit": "kg",
+                    "calories": 265,
+                    "protein": 9,
+                    "carbs": 69,
+                    "fat": 4.3,
+                    "keywords": "oregano, kinh giới"
+                },
+                {
+                    "name": "Đường",
+                    "price": 25000,
+                    "unit": "kg",
+                    "calories": 387,
+                    "protein": 0,
+                    "carbs": 100,
+                    "fat": 0,
+                    "keywords": "đường, sugar"
+                },
+                {
+                    "name": "Muối",
+                    "price": 10000,
+                    "unit": "kg",
+                    "calories": 0,
+                    "protein": 0,
+                    "carbs": 0,
+                    "fat": 0,
+                    "keywords": "muối, salt"
+                },
+                {
+                    "name": "Tiêu đen",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 251,
+                    "protein": 10,
+                    "carbs": 64,
+                    "fat": 3.3,
+                    "keywords": "tiêu, black pepper"
+                },
+                {
+                    "name": "Bột ngọt",
+                    "price": 50000,
+                    "unit": "kg",
+                    "calories": 0,
+                    "protein": 0,
+                    "carbs": 0,
+                    "fat": 0,
+                    "keywords": "bột ngọt, MSG"
+                },
+                {
+                    "name": "Hạt nêm",
+                    "price": 80000,
+                    "unit": "kg",
+                    "calories": 220,
+                    "protein": 12,
+                    "carbs": 35,
+                    "fat": 3,
+                    "keywords": "hạt nêm, seasoning"
+                },
+                {
+                    "name": "Mắm tôm",
+                    "price": 60000,
+                    "unit": "lít",
+                    "calories": 76,
+                    "protein": 12,
+                    "carbs": 4,
+                    "fat": 1,
+                    "keywords": "mắm tôm, shrimp paste"
+                },
+                {
+                    "name": "Tương ớt",
+                    "price": 40000,
+                    "unit": "lít",
+                    "calories": 119,
+                    "protein": 1,
+                    "carbs": 28,
+                    "fat": 0.3,
+                    "keywords": "tương ớt, sriracha"
+                },
+                {
+                    "name": "Tương cà",
+                    "price": 35000,
+                    "unit": "lít",
+                    "calories": 112,
+                    "protein": 1,
+                    "carbs": 28,
+                    "fat": 0.1,
+                    "keywords": "tương cà, ketchup"
+                },
+                {
+                    "name": "Mayonnaise",
+                    "price": 80000,
+                    "unit": "lít",
+                    "calories": 680,
+                    "protein": 1,
+                    "carbs": 1,
+                    "fat": 75,
+                    "keywords": "mayonnaise"
+                },
+                {
+                    "name": "Mù tạt",
+                    "price": 100000,
+                    "unit": "kg",
+                    "calories": 66,
+                    "protein": 4,
+                    "carbs": 6,
+                    "fat": 3,
+                    "keywords": "mù tạt, mustard"
+                },
+                {
+                    "name": "Giấm gạo",
+                    "price": 30000,
+                    "unit": "lít",
+                    "calories": 18,
+                    "protein": 0,
+                    "carbs": 0,
+                    "fat": 0,
+                    "keywords": "giấm, rice vinegar"
+                },
+                {
+                    "name": "Mật ong",
+                    "price": 200000,
+                    "unit": "lít",
+                    "calories": 304,
+                    "protein": 0.3,
+                    "carbs": 82,
+                    "fat": 0,
+                    "keywords": "mật ong, honey"
+                },
+                {
+                    "name": "Bột cà ri",
+                    "price": 150000,
+                    "unit": "kg",
+                    "calories": 325,
+                    "protein": 13,
+                    "carbs": 58,
+                    "fat": 14,
+                    "keywords": "cà ri, curry powder"
+                },
+                {
+                    "name": "Quế",
+                    "price": 200000,
+                    "unit": "kg",
+                    "calories": 247,
+                    "protein": 4,
+                    "carbs": 81,
+                    "fat": 1.2,
+                    "keywords": "quế, cinnamon"
+                },
+                {
+                    "name": "Đinh hương",
+                    "price": 300000,
+                    "unit": "kg",
+                    "calories": 274,
+                    "protein": 6,
+                    "carbs": 66,
+                    "fat": 13,
+                    "keywords": "đinh hương, cloves"
+                },
+                {
+                    "name": "Hồi",
+                    "price": 250000,
+                    "unit": "kg",
+                    "calories": 337,
+                    "protein": 18,
+                    "carbs": 50,
+                    "fat": 16,
+                    "keywords": "hồi, star anise"
+                },
+                {
+                    "name": "Nghệ",
+                    "price": 100000,
+                    "unit": "kg",
+                    "calories": 312,
+                    "protein": 10,
+                    "carbs": 67,
+                    "fat": 4,
+                    "keywords": "nghệ, turmeric"
+                },
+                {
+                    "name": "Ớt bột",
+                    "price": 120000,
+                    "unit": "kg",
+                    "calories": 282,
+                    "protein": 12,
+                    "carbs": 50,
+                    "fat": 14,
+                    "keywords": "ớt bột, chili powder"
+                },
+                {
+                    "name": "Nước cốt dừa",
+                    "price": 50000,
+                    "unit": "lít",
+                    "calories": 230,
+                    "protein": 2,
+                    "carbs": 6,
+                    "fat": 24,
+                    "keywords": "nước cốt dừa, coconut milk"
+                }
+            ]
+        }
+    ],
+    "nutritionNote": "Giá trị dinh dưỡng tính trên 100g sản phẩm. Giá bán tham khảo tại thị trường Việt Nam 2026."
+}
