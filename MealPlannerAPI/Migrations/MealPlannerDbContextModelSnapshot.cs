@@ -402,6 +402,9 @@ namespace MealPlannerAPI.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsHidden")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Keywords")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
