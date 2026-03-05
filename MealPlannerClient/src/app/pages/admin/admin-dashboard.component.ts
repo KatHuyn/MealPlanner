@@ -828,30 +828,26 @@ export class AdminDashboardComponent implements OnInit {
 
   loadOrders(): void {
     this.loading.set(true);
-    const filters = {
-      status: this.statusFilter || undefined,
-      startDate: this.startDate ? new Date(this.startDate) : undefined,
-      endDate: this.endDate ? new Date(this.endDate) : undefined
-    };
-    this.orderService.getAllOrders(1, 50, filters.status, filters.startDate, filters.endDate).subscribe({
+    
+    let startDate: Date | undefined = undefined;
+    let endDate: Date | undefined = undefined;
+
+    if (this.startDate && this.startDate.trim()) {
+      startDate = new Date(this.startDate + 'T00:00:00Z');
+    }
+    if (this.endDate && this.endDate.trim()) {
+      endDate = new Date(this.endDate + 'T23:59:59Z');
+    }
+
+    this.orderService.getAllOrders(1, 50, this.statusFilter || undefined, startDate, endDate).subscribe({
       next: (response: unknown) => {
         const res = response as { success?: boolean; data?: Order[] };
         const orders = res.data ?? (response as Order[]);
-        // Filter by date range on client if needed
-        const filtered = orders.filter(order => {
-          const orderDate = new Date(order.createdAt);
-          if (this.startDate && orderDate < new Date(this.startDate)) return false;
-          if (this.endDate) {
-            const endDateObj = new Date(this.endDate);
-            endDateObj.setHours(23, 59, 59, 999);
-            if (orderDate > endDateObj) return false;
-          }
-          return true;
-        });
-        this.orders.set(filtered);
+        this.orders.set(orders);
         this.loading.set(false);
       },
-      error: () => {
+      error: (err) => {
+        console.error('Failed to load orders:', err);
         this.loading.set(false);
       }
     });

@@ -124,6 +124,34 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// [Admin] Lấy tất cả sản phẩm kể cả ẩn (debug)
+    /// </summary>
+    [Authorize]
+    [HttpGet("admin/all")]
+    public async Task<ActionResult<ApiResponse<List<ProductDto>>>> GetAllProductsAdmin()
+    {
+        if (!IsAdmin())
+            return Forbid();
+
+        var result = await _productService.GetAllProductsAdminAsync();
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// [Admin] Unhide tất cả sản phẩm (quick fix)
+    /// </summary>
+    [Authorize]
+    [HttpPost("admin/unhide-all")]
+    public async Task<ActionResult<ApiResponse<bool>>> UnhideAllProducts()
+    {
+        if (!IsAdmin())
+            return Forbid();
+
+        var result = await _productService.UnhideAllProductsAsync();
+        return Ok(result);
+    }
+
     private bool IsAdmin()
     {
         var isAdminClaim = User.FindFirst("IsAdmin");

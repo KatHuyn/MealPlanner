@@ -257,6 +257,73 @@ public class ProductService : IProductService
         }
     }
 
+    public async Task<ApiResponse<List<ProductDto>>> GetAllProductsAdminAsync()
+    {
+        try
+        {
+            var products = await _context.Products
+                .OrderBy(p => p.Category)
+                .ThenBy(p => p.Name)
+                .Select(p => MapToProductDto(p))
+                .ToListAsync();
+
+            return new ApiResponse<List<ProductDto>>
+            {
+                Success = true,
+                Data = products
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<List<ProductDto>>
+            {
+                Success = false,
+                Message = "Có lỗi xảy ra",
+                Errors = new List<string> { ex.Message }
+            };
+        }
+    }
+
+    public async Task<ApiResponse<bool>> UnhideAllProductsAsync()
+    {
+        try
+        {
+            var products = await _context.Products.ToListAsync();
+            int count = 0;
+
+            foreach (var product in products)
+            {
+                if (product.IsHidden)
+                {
+                    product.IsHidden = false;
+                    product.UpdatedAt = DateTime.UtcNow;
+                    count++;
+                }
+            }
+
+            if (count > 0)
+            {
+                await _context.SaveChangesAsync();
+            }
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = $"Unhide thành công {count} sản phẩm",
+                Data = true
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "Có lỗi xảy ra",
+                Errors = new List<string> { ex.Message }
+            };
+        }
+    }
+
     public async Task<ApiResponse<List<string>>> GetCategoriesAsync()
     {
         try
