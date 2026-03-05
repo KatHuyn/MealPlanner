@@ -110,12 +110,14 @@ public class OrdersController : ControllerBase
     public async Task<ActionResult<ApiResponse<List<OrderDto>>>> GetAllOrders(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
-        [FromQuery] string? status = null)
+        [FromQuery] string? status = null,
+        [FromQuery] DateTime? startDate = null,
+        [FromQuery] DateTime? endDate = null)
     {
         if (!IsAdmin())
             return Forbid();
 
-        var result = await _orderService.GetAllOrdersAsync(page, pageSize, status);
+        var result = await _orderService.GetAllOrdersAsync(page, pageSize, status, startDate, endDate);
         return Ok(result);
     }
 

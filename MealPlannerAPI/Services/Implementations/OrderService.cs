@@ -286,7 +286,7 @@ public class OrderService : IOrderService
         }
     }
 
-    public async Task<ApiResponse<List<OrderDto>>> GetAllOrdersAsync(int page = 1, int pageSize = 20, string? status = null)
+    public async Task<ApiResponse<List<OrderDto>>> GetAllOrdersAsync(int page = 1, int pageSize = 20, string? status = null, DateTime? startDate = null, DateTime? endDate = null)
     {
         try
         {
@@ -295,6 +295,19 @@ public class OrderService : IOrderService
             if (!string.IsNullOrEmpty(status) && Enum.TryParse<OrderStatus>(status, true, out var orderStatus))
             {
                 query = query.Where(o => o.Status == orderStatus);
+            }
+
+            // Filter by start date
+            if (startDate.HasValue)
+            {
+                query = query.Where(o => o.CreatedAt >= startDate.Value);
+            }
+
+            // Filter by end date
+            if (endDate.HasValue)
+            {
+                var endDateWithTime = endDate.Value.AddDays(1).AddTicks(-1); // End of day
+                query = query.Where(o => o.CreatedAt <= endDateWithTime);
             }
 
             var orders = await query
