@@ -72,8 +72,13 @@ export class OrderService {
     );
   }
 
-  getDashboardStats(): Observable<DashboardStats> {
-    return this.http.get<ApiResponse<DashboardStats>>(`${this.apiUrl}/admin/dashboard-stats`).pipe(
+  getDashboardStats(selectedDate?: string, selectedMonth?: string): Observable<DashboardStats> {
+    let url = `${this.apiUrl}/admin/dashboard-stats`;
+    const params: string[] = [];
+    if (selectedDate) params.push(`selectedDate=${selectedDate}`);
+    if (selectedMonth) params.push(`selectedMonth=${selectedMonth}`);
+    if (params.length) url += '?' + params.join('&');
+    return this.http.get<ApiResponse<DashboardStats>>(url).pipe(
       map(response => response.data!)
     );
   }

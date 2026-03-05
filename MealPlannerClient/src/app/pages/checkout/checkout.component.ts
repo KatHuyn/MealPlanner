@@ -479,13 +479,13 @@ export class CheckoutComponent implements OnInit {
   }
 
   calculateCartItemPrice(item: CartItem): number {
-    // CartItem có quantity tính bằng g (ví dụ: 1100g)
-    // Product có price tính theo kg (ví dụ: 70,000đ/kg)
+    // Cart quantity đã theo đơn vị nhập (g cho kg, ml cho lít, nguyên đơn vị cho còn lại)
+    const inputUnit = this.getInputUnit(item.product);
     return calculateIngredientPrice(
       item.product.price,
       item.product.unit,
       item.quantity,
-      'g' // Cart items luôn nhập theo g
+      inputUnit
     );
   }
 

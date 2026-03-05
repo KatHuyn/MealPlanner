@@ -161,4 +161,19 @@ public static class UnitConverter
         var u = unit.ToLower().Trim();
         return u == "hộp" || u == "hop" || u == "box";
     }
+
+    /// <summary>
+    /// Xác định đơn vị nhập tương ứng với đơn vị sản phẩm
+    /// Cart frontend gửi số lượng theo đơn vị này:
+    /// - Sản phẩm bán kg → cart gửi gram (g)
+    /// - Sản phẩm bán lít → cart gửi ml
+    /// - Các đơn vị khác → giữ nguyên
+    /// </summary>
+    public static string GetInputUnit(string? productUnit)
+    {
+        var unit = (productUnit ?? "").ToLower().Trim();
+        if (IsKilogramUnit(unit)) return "g";
+        if (IsLiterUnit(unit)) return "ml";
+        return productUnit ?? "";
+    }
 }

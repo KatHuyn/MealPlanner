@@ -57,9 +57,9 @@ public class OrderService : IOrderService
                     };
                 }
 
-                // Chuyển đổi số lượng đặt hàng (grams) sang đơn vị tồn kho (kg) trước khi so sánh
+                // Chuyển đổi số lượng đặt hàng sang đơn vị tồn kho trước khi so sánh
                 var quantityInStockUnit = Helpers.UnitConverter.ConvertToStockUnit(
-                    item.Quantity, "g", product.Unit);
+                    item.Quantity, Helpers.UnitConverter.GetInputUnit(product.Unit), product.Unit);
 
                 if (!product.IsAvailable || product.QuantityInStock < quantityInStockUnit)
                 {
@@ -79,7 +79,7 @@ public class OrderService : IOrderService
                         product.Price,
                         product.Unit,
                         item.Quantity,
-                        "g" // Cart items luôn gửi số lượng theo gram
+                        Helpers.UnitConverter.GetInputUnit(product.Unit) // Cart gửi quantity theo đơn vị nhập (g cho kg, ml cho lít, nguyên đơn vị cho còn lại)
                     )
                 };
 
@@ -440,17 +440,38 @@ public class OrderService : IOrderService
         };
     }
 
-    public async Task<ApiResponse<DashboardStatsDto>> GetDashboardStatsAsync()
+    public async Task<ApiResponse<DashboardStatsDto>> GetDashboardStatsAsync(string? selectedDate = null, string? selectedMonth = null)
     {
         try
         {
             // Convert UTC to Vietnam timezone (UTC+7)
             var vietnamTz = TimeZoneInfo.CreateCustomTimeZone("Vietnam Standard Time", TimeSpan.FromHours(7), "Vietnam Standard Time", "Vietnam Standard Time");
             var vietnamNow = TimeZoneInfo.ConvertTime(DateTime.UtcNow, vietnamTz);
-            var today = vietnamNow.Date;
-            var monthStart = new DateTime(today.Year, today.Month, 1);
+            
+            // Use selected date or default to today
+            DateTime today;
+            if (!string.IsNullOrEmpty(selectedDate) && DateTime.TryParse(selectedDate, out var parsedDate))
+            {
+                today = parsedDate.Date;
+            }
+            else
+            {
+                today = vietnamNow.Date;
+            }
 
-            _logger.LogInformation($"Dashboard Stats - UTC Now: {DateTime.UtcNow}, Vietnam Now: {vietnamNow}, Today: {today}");
+            // Use selected month or default to the month of the selected date
+            DateTime monthStart;
+            if (!string.IsNullOrEmpty(selectedMonth) && DateTime.TryParse(selectedMonth + "-01", out var parsedMonth))
+            {
+                monthStart = parsedMonth.Date;
+            }
+            else
+            {
+                monthStart = new DateTime(today.Year, today.Month, 1);
+            }
+            var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+
+            _logger.LogInformation($"Dashboard Stats - Selected Date: {today}, Month: {monthStart:yyyy-MM}");
 
             var orders = await _context.Orders
                 .Include(o => o.OrderItems)
@@ -459,33 +480,31 @@ public class OrderService : IOrderService
 
             var deliveredOrders = orders.Where(o => o.Status == OrderStatus.Delivered).ToList();
 
-            // Count today's orders: COD uses DeliveredAt, others use CreatedAt
+            // Count selected day's orders: COD uses DeliveredAt, others use CreatedAt
             var todayOrders = orders.Count(o =>
             {
                 if (o.PaymentMethod == "COD")
                 {
-                    // COD: count by delivery date
                     return o.DeliveredAt.HasValue && TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date == today;
                 }
                 else
                 {
-                    // Prepaid (BankTransfer, etc): count by order creation date
                     return TimeZoneInfo.ConvertTime(o.CreatedAt, vietnamTz).Date == today;
                 }
             });
 
-            // Count month's orders: COD uses DeliveredAt, others use CreatedAt
+            // Count selected month's orders: COD uses DeliveredAt, others use CreatedAt
             var monthOrders = orders.Count(o =>
             {
                 if (o.PaymentMethod == "COD")
                 {
-                    // COD: count by delivery date
-                    return o.DeliveredAt.HasValue && TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date >= monthStart;
+                    var d = o.DeliveredAt.HasValue ? TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date : (DateTime?)null;
+                    return d.HasValue && d.Value >= monthStart && d.Value <= monthEnd;
                 }
                 else
                 {
-                    // Prepaid: count by order creation date
-                    return TimeZoneInfo.ConvertTime(o.CreatedAt, vietnamTz).Date >= monthStart;
+                    var d = TimeZoneInfo.ConvertTime(o.CreatedAt, vietnamTz).Date;
+                    return d >= monthStart && d <= monthEnd;
                 }
             });
 
@@ -501,10 +520,34 @@ public class OrderService : IOrderService
 
                 TotalRevenue = deliveredOrders.Sum(o => o.FinalAmount),
                 TodayRevenue = deliveredOrders
-                    .Where(o => o.DeliveredAt.HasValue && TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date == today)
+                    .Where(o =>
+                    {
+                        if (o.PaymentMethod == "COD")
+                        {
+                            // COD: doanh thu tính theo ngày giao hàng (hoàn thành COD)
+                            return o.DeliveredAt.HasValue && TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date == today;
+                        }
+                        else
+                        {
+                            // Chuyển khoản: doanh thu tính theo ngày đặt hàng (ngày chuyển khoản)
+                            return TimeZoneInfo.ConvertTime(o.CreatedAt, vietnamTz).Date == today;
+                        }
+                    })
                     .Sum(o => o.FinalAmount),
                 MonthRevenue = deliveredOrders
-                    .Where(o => o.DeliveredAt.HasValue && TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date >= monthStart)
+                    .Where(o =>
+                    {
+                        if (o.PaymentMethod == "COD")
+                        {
+                            var d = o.DeliveredAt.HasValue ? TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date : (DateTime?)null;
+                            return d.HasValue && d.Value >= monthStart && d.Value <= monthEnd;
+                        }
+                        else
+                        {
+                            var d = TimeZoneInfo.ConvertTime(o.CreatedAt, vietnamTz).Date;
+                            return d >= monthStart && d <= monthEnd;
+                        }
+                    })
                     .Sum(o => o.FinalAmount),
 
                 TodayOrders = todayOrders,

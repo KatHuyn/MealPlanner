@@ -80,6 +80,39 @@ export function getInputUnit(productUnit: string | undefined): string {
 }
 
 /**
+ * Chuyển đổi số lượng nguyên liệu từ đơn vị AI gợi ý sang đơn vị cart
+ * 
+ * Ví dụ:
+ * - 3 quả trứng, product "chục" → ceil(3/10) = 1 (cart lưu 1 chục)
+ * - 200g ức gà, product "kg" → 200 (cart lưu 200g, đúng rồi)
+ * - 30ml dầu ăn, product "lít" → 30 (cart lưu 30ml, đúng rồi)
+ */
+export function convertToCartQuantity(
+    ingredientQuantity: number,
+    ingredientUnit: string | undefined,
+    productUnit: string | undefined
+): number {
+    const ingUnit = (ingredientUnit || '').toLowerCase().trim();
+    const prodUnit = (productUnit || 'kg').toLowerCase().trim();
+    const cartInputUnit = getInputUnit(productUnit).toLowerCase().trim();
+
+    // Nếu ingredient unit đã khớp với cart input unit → giữ nguyên
+    if (ingUnit === cartInputUnit) return ingredientQuantity;
+
+    // ingredient "quả"/"cái" nhưng product bán theo "chục"/"vỉ" (10 cái)
+    // 3 quả → ceil(3/10) = 1 chục
+    if (isIndividualUnit(ingUnit) && (isDozenUnit(prodUnit) || isTrayUnit(prodUnit))) {
+        return Math.ceil(ingredientQuantity / 10);
+    }
+
+    // ingredient "g" nhưng product bán theo "kg" → cart cũng lưu g, khớp rồi
+    // ingredient "ml" nhưng product bán theo "lít" → cart cũng lưu ml, khớp rồi
+
+    // Trường hợp mặc định: giữ nguyên
+    return ingredientQuantity;
+}
+
+/**
  * Lấy số lượng tối thiểu dựa trên đơn vị
  */
 export function getMinQuantity(productUnit: string | undefined): number {

@@ -76,5 +76,17 @@ export class ProductService {
       map(response => response.success)
     );
   }
+
+  toggleProductVisibility(id: number): Observable<Product> {
+    return this.http.patch<ApiResponse<Product>>(`${this.apiUrl}/${id}/toggle-visibility`, {}).pipe(
+      map(response => response.data!)
+    );
+  }
+
+  getAllProductsAdmin(): Observable<Product[]> {
+    return this.http.get<ApiResponse<Product[]>>(`${this.apiUrl}/admin/all`).pipe(
+      map(response => response.data || [])
+    );
+  }
 }
 

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MealPlanService, ProductForSwap, SwapSuggestion } from '../../services/meal-plan.service';
 import { CartService } from '../../services/cart.service';
 import { MealPlan, Meal, MealPlanIngredient, MealType, Product } from '../../models/models';
-import { calculateIngredientPrice } from '../../utils/unit-converter';
+import { calculateIngredientPrice, convertToCartQuantity } from '../../utils/unit-converter';
 
 @Component({
   selector: 'app-meal-plan-detail',
@@ -1018,8 +1018,10 @@ export class MealPlanDetailComponent implements OnInit {
 
   addToCart(ing: MealPlanIngredient): void {
     if (ing.product) {
-      // Use the actual quantity from the ingredient, not 1
-      this.cartService.addToCart(ing.product, ing.quantity);
+      // Chuyển đổi số lượng từ đơn vị nguyên liệu sang đơn vị cart
+      // VD: 3 quả trứng → 1 chục, 200g thịt → 200g
+      const cartQty = convertToCartQuantity(ing.quantity, ing.unit, ing.product.unit);
+      this.cartService.addToCart(ing.product, cartQty);
       alert(`Đã thêm ${ing.product.name} (${ing.quantity} ${ing.unit}) vào giỏ hàng!`);
     }
   }
@@ -1032,8 +1034,8 @@ export class MealPlanDetailComponent implements OnInit {
     for (const meal of plan.meals) {
       for (const ing of meal.ingredients) {
         if (ing.isMatched && ing.product) {
-          // Use the actual quantity from the ingredient, not 1
-          this.cartService.addToCart(ing.product, ing.quantity);
+          const cartQty = convertToCartQuantity(ing.quantity, ing.unit, ing.product.unit);
+          this.cartService.addToCart(ing.product, cartQty);
           count++;
         }
       }

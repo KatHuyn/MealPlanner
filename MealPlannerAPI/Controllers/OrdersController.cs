@@ -94,12 +94,14 @@ public class OrdersController : ControllerBase
     /// [Admin] Lấy thống kê dashboard
     /// </summary>
     [HttpGet("admin/dashboard-stats")]
-    public async Task<ActionResult<ApiResponse<DashboardStatsDto>>> GetDashboardStats()
+    public async Task<ActionResult<ApiResponse<DashboardStatsDto>>> GetDashboardStats(
+        [FromQuery] string? selectedDate = null,
+        [FromQuery] string? selectedMonth = null)
     {
         if (!IsAdmin())
             return Forbid();
 
-        var result = await _orderService.GetDashboardStatsAsync();
+        var result = await _orderService.GetDashboardStatsAsync(selectedDate, selectedMonth);
         return Ok(result);
     }
 

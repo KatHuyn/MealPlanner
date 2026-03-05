@@ -7,10 +7,10 @@ import { AuthService } from '../../services/auth.service';
 import { Product } from '../../models/models';
 
 @Component({
-    selector: 'app-admin-products',
-    imports: [CommonModule, FormsModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
+  selector: 'app-admin-products',
+  imports: [CommonModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
     <div class="admin-products">
       @if (!isAdmin()) {
         <div class="access-denied">
@@ -44,12 +44,13 @@ import { Product } from '../../models/models';
                 <th>Giá</th>
                 <th>Tồn kho</th>
                 <th>Calories</th>
+                <th>Trạng thái</th>
                 <th>Hành động</th>
               </tr>
             </thead>
             <tbody>
               @for (product of filteredProducts(); track product.id) {
-                <tr>
+                <tr [class.hidden-product]="product.isHidden">
                   <td class="img-cell">
                     <img [src]="product.imageUrl || 'https://placehold.co/60x60/f5f5f5/999?text=No+Image'" [alt]="product.name">
                   </td>
@@ -58,7 +59,15 @@ import { Product } from '../../models/models';
                   <td class="price-cell">{{ product.price | number }}đ/{{ product.unit }}</td>
                   <td>{{ product.quantityInStock }}</td>
                   <td>{{ product.calories }} kcal</td>
+                  <td>
+                    <span class="status-badge" [class.status-hidden]="product.isHidden" [class.status-active]="!product.isHidden">
+                      {{ product.isHidden ? '🔴 Đã ẩn' : '🟢 Đang bán' }}
+                    </span>
+                  </td>
                   <td class="actions-cell">
+                    <button class="btn-toggle" [class.btn-show]="product.isHidden" [class.btn-hide]="!product.isHidden" (click)="toggleVisibility(product)" [title]="product.isHidden ? 'Hiện lại sản phẩm' : 'Ẩn sản phẩm'">
+                      {{ product.isHidden ? '👁️' : '🙈' }}
+                    </button>
                     <button class="btn-edit" (click)="openEditModal(product)">✏️</button>
                     <button class="btn-delete" (click)="confirmDelete(product)">🗑️</button>
                   </td>
@@ -159,7 +168,7 @@ import { Product } from '../../models/models';
       }
     </div>
   `,
-    styles: [`
+  styles: [`
     .admin-products { padding: 2rem; max-width: 1400px; margin: 0 auto; min-height: calc(100vh - 70px); background: #f5f7fa; }
     .access-denied { text-align: center; padding: 3rem; background: white; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
     .access-denied button { margin-top: 1rem; padding: 0.75rem 1.5rem; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; }
@@ -183,11 +192,20 @@ import { Product } from '../../models/models';
     .img-cell img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; }
     .name-cell { font-weight: 600; color: #333; }
     .price-cell { color: #27ae60; font-weight: 600; }
-    .actions-cell { display: flex; gap: 0.5rem; }
-    .btn-edit, .btn-delete { padding: 0.5rem; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; transition: transform 0.2s; }
+    .actions-cell { display: flex; gap: 0.5rem; align-items: center; }
+    .btn-edit, .btn-delete, .btn-toggle { padding: 0.5rem; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; transition: transform 0.2s; }
     .btn-edit { background: #e3f2fd; }
     .btn-delete { background: #ffebee; }
-    .btn-edit:hover, .btn-delete:hover { transform: scale(1.1); }
+    .btn-toggle.btn-hide { background: #fff3e0; }
+    .btn-toggle.btn-show { background: #e8f5e9; }
+    .btn-edit:hover, .btn-delete:hover, .btn-toggle:hover { transform: scale(1.1); }
+    
+    .hidden-product { opacity: 0.5; background: #f9f9f9 !important; }
+    .hidden-product:hover { opacity: 0.7; }
+    
+    .status-badge { padding: 0.3rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+    .status-active { background: #e8f5e9; color: #2e7d32; }
+    .status-hidden { background: #ffebee; color: #c62828; }
     
     .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
     .modal { background: white; border-radius: 16px; padding: 2rem; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; }
@@ -214,164 +232,171 @@ import { Product } from '../../models/models';
   `]
 })
 export class AdminProductsComponent implements OnInit {
-    private productService = inject(ProductService);
-    private authService = inject(AuthService);
-    private router = inject(Router);
+  private productService = inject(ProductService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-    products = signal<Product[]>([]);
-    filteredProducts = signal<Product[]>([]);
-    categories = signal<string[]>([]);
-    showModal = signal(false);
-    isEditing = signal(false);
-    saving = signal(false);
-    isAdmin = signal(false);
+  products = signal<Product[]>([]);
+  filteredProducts = signal<Product[]>([]);
+  categories = signal<string[]>([]);
+  showModal = signal(false);
+  isEditing = signal(false);
+  saving = signal(false);
+  isAdmin = signal(false);
 
-    searchQuery = '';
-    selectedCategory = '';
-    editingProductId: number | null = null;
+  searchQuery = '';
+  selectedCategory = '';
+  editingProductId: number | null = null;
 
-    editForm: CreateProductRequest = this.getEmptyForm();
+  editForm: CreateProductRequest = this.getEmptyForm();
 
-    ngOnInit(): void {
-        const user = this.authService.currentUser;
-        this.isAdmin.set(user?.isAdmin ?? false);
+  ngOnInit(): void {
+    const user = this.authService.currentUser;
+    this.isAdmin.set(user?.isAdmin ?? false);
 
-        if (this.isAdmin()) {
-            this.loadProducts();
-            this.loadCategories();
+    if (this.isAdmin()) {
+      this.loadProducts();
+      this.loadCategories();
+    }
+  }
+
+  getEmptyForm(): CreateProductRequest {
+    return {
+      name: '',
+      description: '',
+      price: 0,
+      unit: 'kg',
+      quantityInStock: 100,
+      category: '',
+      imageUrl: '',
+      calories: 0,
+      protein: 0,
+      carbs: 0,
+      fat: 0,
+      keywords: ''
+    };
+  }
+
+  loadProducts(): void {
+    this.productService.getAllProductsAdmin().subscribe({
+      next: (products) => {
+        this.products.set(products);
+        this.filterProducts();
+      }
+    });
+  }
+
+  loadCategories(): void {
+    this.productService.getCategories().subscribe({
+      next: (cats) => this.categories.set(cats)
+    });
+  }
+
+  filterProducts(): void {
+    let filtered = this.products();
+
+    if (this.selectedCategory) {
+      filtered = filtered.filter(p => p.category === this.selectedCategory);
+    }
+
+    if (this.searchQuery) {
+      const query = this.searchQuery.toLowerCase();
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        (p.keywords && p.keywords.toLowerCase().includes(query))
+      );
+    }
+
+    this.filteredProducts.set(filtered);
+  }
+
+  openAddModal(): void {
+    this.editForm = this.getEmptyForm();
+    this.editingProductId = null;
+    this.isEditing.set(false);
+    this.showModal.set(true);
+  }
+
+  openEditModal(product: Product): void {
+    this.editForm = {
+      name: product.name,
+      description: product.description || '',
+      price: product.price,
+      unit: product.unit || 'kg',
+      quantityInStock: product.quantityInStock,
+      category: product.category || '',
+      imageUrl: product.imageUrl || '',
+      calories: product.calories || 0,
+      protein: product.protein || 0,
+      carbs: product.carbs || 0,
+      fat: product.fat || 0,
+      keywords: product.keywords || ''
+    };
+    this.editingProductId = product.id;
+    this.isEditing.set(true);
+    this.showModal.set(true);
+  }
+
+  closeModal(): void {
+    this.showModal.set(false);
+  }
+
+  saveProduct(): void {
+    if (!this.editForm.name || !this.editForm.price) {
+      alert('Vui lòng nhập tên và giá sản phẩm');
+      return;
+    }
+
+    this.saving.set(true);
+
+    if (this.isEditing() && this.editingProductId) {
+      this.productService.updateProduct(this.editingProductId, this.editForm).subscribe({
+        next: () => {
+          this.saving.set(false);
+          this.closeModal();
+          this.loadProducts();
+        },
+        error: (err) => {
+          this.saving.set(false);
+          alert('Lỗi: ' + (err.error?.message || 'Không thể cập nhật sản phẩm'));
         }
-    }
-
-    getEmptyForm(): CreateProductRequest {
-        return {
-            name: '',
-            description: '',
-            price: 0,
-            unit: 'kg',
-            quantityInStock: 100,
-            category: '',
-            imageUrl: '',
-            calories: 0,
-            protein: 0,
-            carbs: 0,
-            fat: 0,
-            keywords: ''
-        };
-    }
-
-    loadProducts(): void {
-        this.productService.getProducts().subscribe({
-            next: (products) => {
-                this.products.set(products);
-                this.filterProducts();
-            }
-        });
-    }
-
-    loadCategories(): void {
-        this.productService.getCategories().subscribe({
-            next: (cats) => this.categories.set(cats)
-        });
-    }
-
-    filterProducts(): void {
-        let filtered = this.products();
-
-        if (this.selectedCategory) {
-            filtered = filtered.filter(p => p.category === this.selectedCategory);
+      });
+    } else {
+      this.productService.createProduct(this.editForm).subscribe({
+        next: () => {
+          this.saving.set(false);
+          this.closeModal();
+          this.loadProducts();
+        },
+        error: (err) => {
+          this.saving.set(false);
+          alert('Lỗi: ' + (err.error?.message || 'Không thể tạo sản phẩm'));
         }
-
-        if (this.searchQuery) {
-            const query = this.searchQuery.toLowerCase();
-            filtered = filtered.filter(p =>
-                p.name.toLowerCase().includes(query) ||
-                (p.keywords && p.keywords.toLowerCase().includes(query))
-            );
-        }
-
-        this.filteredProducts.set(filtered);
+      });
     }
+  }
 
-    openAddModal(): void {
-        this.editForm = this.getEmptyForm();
-        this.editingProductId = null;
-        this.isEditing.set(false);
-        this.showModal.set(true);
+  toggleVisibility(product: Product): void {
+    this.productService.toggleProductVisibility(product.id).subscribe({
+      next: () => this.loadProducts(),
+      error: (err) => alert('Lỗi: ' + (err.error?.message || 'Không thể thay đổi trạng thái'))
+    });
+  }
+
+  confirmDelete(product: Product): void {
+    if (confirm(`Bạn có chắc muốn xóa "${product.name}"?`)) {
+      this.productService.deleteProduct(product.id).subscribe({
+        next: () => this.loadProducts(),
+        error: (err) => alert('Lỗi: ' + (err.error?.message || 'Không thể xóa sản phẩm'))
+      });
     }
+  }
 
-    openEditModal(product: Product): void {
-        this.editForm = {
-            name: product.name,
-            description: product.description || '',
-            price: product.price,
-            unit: product.unit || 'kg',
-            quantityInStock: product.quantityInStock,
-            category: product.category || '',
-            imageUrl: product.imageUrl || '',
-            calories: product.calories || 0,
-            protein: product.protein || 0,
-            carbs: product.carbs || 0,
-            fat: product.fat || 0,
-            keywords: product.keywords || ''
-        };
-        this.editingProductId = product.id;
-        this.isEditing.set(true);
-        this.showModal.set(true);
-    }
+  onImageError(event: Event): void {
+    (event.target as HTMLImageElement).src = 'https://placehold.co/200x200/f5f5f5/999?text=Invalid+URL';
+  }
 
-    closeModal(): void {
-        this.showModal.set(false);
-    }
-
-    saveProduct(): void {
-        if (!this.editForm.name || !this.editForm.price) {
-            alert('Vui lòng nhập tên và giá sản phẩm');
-            return;
-        }
-
-        this.saving.set(true);
-
-        if (this.isEditing() && this.editingProductId) {
-            this.productService.updateProduct(this.editingProductId, this.editForm).subscribe({
-                next: () => {
-                    this.saving.set(false);
-                    this.closeModal();
-                    this.loadProducts();
-                },
-                error: (err) => {
-                    this.saving.set(false);
-                    alert('Lỗi: ' + (err.error?.message || 'Không thể cập nhật sản phẩm'));
-                }
-            });
-        } else {
-            this.productService.createProduct(this.editForm).subscribe({
-                next: () => {
-                    this.saving.set(false);
-                    this.closeModal();
-                    this.loadProducts();
-                },
-                error: (err) => {
-                    this.saving.set(false);
-                    alert('Lỗi: ' + (err.error?.message || 'Không thể tạo sản phẩm'));
-                }
-            });
-        }
-    }
-
-    confirmDelete(product: Product): void {
-        if (confirm(`Bạn có chắc muốn xóa "${product.name}"?`)) {
-            this.productService.deleteProduct(product.id).subscribe({
-                next: () => this.loadProducts(),
-                error: (err) => alert('Lỗi: ' + (err.error?.message || 'Không thể xóa sản phẩm'))
-            });
-        }
-    }
-
-    onImageError(event: Event): void {
-        (event.target as HTMLImageElement).src = 'https://placehold.co/200x200/f5f5f5/999?text=Invalid+URL';
-    }
-
-    goHome(): void {
-        this.router.navigate(['/']);
-    }
+  goHome(): void {
+    this.router.navigate(['/']);
+  }
 }

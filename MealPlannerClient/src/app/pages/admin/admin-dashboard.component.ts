@@ -31,6 +31,15 @@ import { Order, OrderStatus, DashboardStats } from '../../models/models';
           </div>
         </div>
 
+        <!-- Revenue Filter -->
+        <div class="revenue-filter">
+          <div class="filter-group">
+            <label>📅 Chọn ngày:</label>
+            <input type="date" [(ngModel)]="selectedStatsDate" (change)="loadDashboardStats()">
+          </div>
+          <button class="btn-reset-filter" (click)="resetStatsFilter()">↩ Hôm nay</button>
+        </div>
+
         <!-- Revenue Cards -->
         <div class="revenue-section">
           <div class="revenue-card gradient-green">
@@ -44,17 +53,17 @@ import { Order, OrderStatus, DashboardStats } from '../../models/models';
           <div class="revenue-card gradient-blue">
             <div class="revenue-icon">📅</div>
             <div class="revenue-info">
-              <span class="revenue-label">Doanh thu hôm nay</span>
+              <span class="revenue-label">Doanh thu {{ getDateLabel() }}</span>
               <span class="revenue-value">{{ formatCurrency(stats()?.todayRevenue || 0) }}</span>
-              <span class="revenue-sub">{{ stats()?.todayOrders || 0 }} đơn hôm nay</span>
+              <span class="revenue-sub">{{ stats()?.todayOrders || 0 }} đơn</span>
             </div>
           </div>
           <div class="revenue-card gradient-purple">
             <div class="revenue-icon">📆</div>
             <div class="revenue-info">
-              <span class="revenue-label">Doanh thu tháng này</span>
+              <span class="revenue-label">Doanh thu {{ getMonthLabel() }}</span>
               <span class="revenue-value">{{ formatCurrency(stats()?.monthRevenue || 0) }}</span>
-              <span class="revenue-sub">{{ stats()?.monthOrders || 0 }} đơn tháng này</span>
+              <span class="revenue-sub">{{ stats()?.monthOrders || 0 }} đơn</span>
             </div>
           </div>
         </div>
@@ -340,6 +349,67 @@ import { Order, OrderStatus, DashboardStats } from '../../models/models';
     }
 
     /* Revenue Section */
+    .revenue-filter {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+      padding: 1rem 1.25rem;
+      background: white;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .filter-group input[type="date"],
+    .filter-group input[type="month"] {
+      padding: 0.45rem 0.75rem;
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #333;
+      background: #f9f9f9;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .filter-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+    }
+
+    .btn-reset-filter {
+      padding: 0.45rem 1rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: auto;
+    }
+
+    .btn-reset-filter:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+    }
+
     .revenue-section {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -802,6 +872,7 @@ export class AdminDashboardComponent implements OnInit {
   statusFilter = '';
   startDate: string = '';
   endDate: string = '';
+  selectedStatsDate: string = '';
 
   isAdmin = signal(false);
 
@@ -810,13 +881,17 @@ export class AdminDashboardComponent implements OnInit {
     this.isAdmin.set(user?.isAdmin ?? false);
 
     if (this.isAdmin()) {
+      const now = new Date();
+      this.selectedStatsDate = this.formatDateForInput(now);
       this.loadDashboardStats();
       this.loadOrders();
     }
   }
 
   loadDashboardStats(): void {
-    this.orderService.getDashboardStats().subscribe({
+    // Derive month from selected date
+    const month = this.selectedStatsDate ? this.selectedStatsDate.substring(0, 7) : undefined;
+    this.orderService.getDashboardStats(this.selectedStatsDate, month).subscribe({
       next: (stats) => {
         this.stats.set(stats);
       },
@@ -828,7 +903,7 @@ export class AdminDashboardComponent implements OnInit {
 
   loadOrders(): void {
     this.loading.set(true);
-    
+
     let startDate: Date | undefined = undefined;
     let endDate: Date | undefined = undefined;
 
@@ -914,5 +989,35 @@ export class AdminDashboardComponent implements OnInit {
 
   goHome(): void {
     this.router.navigate(['/']);
+  }
+
+  resetStatsFilter(): void {
+    const now = new Date();
+    this.selectedStatsDate = this.formatDateForInput(now);
+    this.loadDashboardStats();
+  }
+
+  getDateLabel(): string {
+    if (!this.selectedStatsDate) return 'hôm nay';
+    const today = this.formatDateForInput(new Date());
+    if (this.selectedStatsDate === today) return 'hôm nay';
+    const parts = this.selectedStatsDate.split('-');
+    return `ngày ${parts[2]}/${parts[1]}`;
+  }
+
+  getMonthLabel(): string {
+    if (!this.selectedStatsDate) return 'tháng này';
+    const thisMonth = this.formatDateForInput(new Date()).substring(0, 7);
+    const selectedMonth = this.selectedStatsDate.substring(0, 7);
+    if (selectedMonth === thisMonth) return 'tháng này';
+    const parts = selectedMonth.split('-');
+    return `tháng ${parseInt(parts[1])}/${parts[0]}`;
+  }
+
+  private formatDateForInput(date: Date): string {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 }
