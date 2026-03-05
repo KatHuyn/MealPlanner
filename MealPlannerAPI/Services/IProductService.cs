@@ -10,6 +10,7 @@ public interface IProductService
     Task<ApiResponse<ProductDto>> CreateProductAsync(CreateProductRequest request);
     Task<ApiResponse<ProductDto>> UpdateProductAsync(int productId, CreateProductRequest request);
     Task<ApiResponse<bool>> DeleteProductAsync(int productId);
+    Task<ApiResponse<ProductDto>> ToggleProductVisibilityAsync(int productId);
     Task<ApiResponse<List<string>>> GetCategoriesAsync();
     Task<List<Product>> SearchProductsByKeywordsAsync(string keyword);
 }

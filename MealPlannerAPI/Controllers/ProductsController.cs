@@ -106,6 +106,24 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Toggle ẩn/hiện sản phẩm (Admin only)
+    /// </summary>
+    [Authorize]
+    [HttpPatch("{id}/toggle-visibility")]
+    public async Task<ActionResult<ApiResponse<ProductDto>>> ToggleProductVisibility(int id)
+    {
+        if (!IsAdmin())
+            return Forbid();
+
+        var result = await _productService.ToggleProductVisibilityAsync(id);
+        
+        if (!result.Success)
+            return BadRequest(result);
+            
+        return Ok(result);
+    }
+
     private bool IsAdmin()
     {
         var isAdminClaim = User.FindFirst("IsAdmin");

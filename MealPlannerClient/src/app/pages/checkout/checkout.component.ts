@@ -103,12 +103,17 @@ import { calculateIngredientPrice } from '../../utils/unit-converter';
           @if (cartItems.length > 0 && !mealPlan) {
             <div class="section">
               <h3>🛒 Sản phẩm trong giỏ</h3>
+              <div class="cart-preview-header">
+                <span class="col-name">Sản phẩm</span>
+                <span class="col-quantity">Số lượng</span>
+                <span class="col-price">Giá</span>
+              </div>
               <div class="cart-preview">
                 @for (item of cartItems; track item.product.id) {
                   <div class="cart-preview-item">
-                    <span>{{ item.product.name }}</span>
-                    <span>{{ item.quantity }}{{ getInputUnit(item.product) }}</span>
-                    <span>{{ calculateCartItemPrice(item) | number }} đ</span>
+                    <span class="col-name">{{ item.product.name }}</span>
+                    <span class="col-quantity">{{ item.quantity }}{{ getInputUnit(item.product) }}</span>
+                    <span class="col-price">{{ calculateCartItemPrice(item) | number }} đ</span>
                   </div>
                 }
               </div>
@@ -183,14 +188,37 @@ import { calculateIngredientPrice } from '../../utils/unit-converter';
     .meal-plan-info p { margin: 0 0 0.5rem; }
     .meal-plan-info ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }
 
-    .cart-preview-item {
+    .cart-preview {
       display: flex;
-      justify-content: space-between;
-      padding: 0.5rem 0;
+      flex-direction: column;
+    }
+
+    .cart-preview-header {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 2px solid #e0e0e0;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .cart-preview-item {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 1rem;
+      padding: 0.75rem 0;
       border-bottom: 1px solid #eee;
+      align-items: center;
     }
 
     .cart-preview-item:last-child { border-bottom: none; }
+
+    .col-name { text-align: left; }
+    .col-quantity { text-align: center; }
+    .col-price { text-align: right; }
 
     .checkout-summary {
       background: white;

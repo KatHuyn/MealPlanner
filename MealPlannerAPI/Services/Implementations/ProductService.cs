@@ -25,6 +25,9 @@ public class ProductService : IProductService
                 query = query.Where(p => p.Category == category);
             }
 
+            // Filter out hidden products
+            query = query.Where(p => !p.IsHidden);
+
             if (availableOnly == true)
             {
                 query = query.Where(p => p.IsAvailable && p.QuantityInStock > 0);
@@ -217,6 +220,43 @@ public class ProductService : IProductService
         }
     }
 
+    public async Task<ApiResponse<ProductDto>> ToggleProductVisibilityAsync(int productId)
+    {
+        try
+        {
+            var product = await _context.Products.FindAsync(productId);
+
+            if (product == null)
+            {
+                return new ApiResponse<ProductDto>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy sản phẩm"
+                };
+            }
+
+            product.IsHidden = !product.IsHidden;
+            product.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<ProductDto>
+            {
+                Success = true,
+                Message = product.IsHidden ? "Ẩn sản phẩm thành công" : "Hiển thị sản phẩm thành công",
+                Data = MapToProductDto(product)
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<ProductDto>
+            {
+                Success = false,
+                Message = "Có lỗi xảy ra",
+                Errors = new List<string> { ex.Message }
+            };
+        }
+    }
+
     public async Task<ApiResponse<List<string>>> GetCategoriesAsync()
     {
         try
@@ -270,6 +310,7 @@ public class ProductService : IProductService
             Category = product.Category,
             ImageUrl = product.ImageUrl,
             IsAvailable = product.IsAvailable,
+            IsHidden = product.IsHidden,
             Calories = product.Calories,
             Protein = product.Protein,
             Carbs = product.Carbs,

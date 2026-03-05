@@ -50,10 +50,16 @@ export class OrderService {
   }
 
   // Admin methods
-  getAllOrders(page = 1, pageSize = 20, status?: string): Observable<Order[]> {
+  getAllOrders(page = 1, pageSize = 20, status?: string, startDate?: Date, endDate?: Date): Observable<Order[]> {
     let url = `${this.apiUrl}/admin/all?page=${page}&pageSize=${pageSize}`;
     if (status) {
       url += `&status=${status}`;
+    }
+    if (startDate) {
+      url += `&startDate=${startDate.toISOString()}`;
+    }
+    if (endDate) {
+      url += `&endDate=${endDate.toISOString()}`;
     }
     return this.http.get<ApiResponse<Order[]>>(url).pipe(
       map(response => response.data || [])

@@ -33,6 +33,8 @@ public class Product
     
     public bool IsAvailable { get; set; } = true;
     
+    public bool IsHidden { get; set; } = false; // Admin có thể ẩn nguyên liệu
+    
     // Thông tin dinh dưỡng (per 100g)
     [Column(TypeName = "decimal(8,2)")]
     public decimal? Calories { get; set; }

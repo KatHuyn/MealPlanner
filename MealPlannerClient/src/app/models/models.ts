@@ -64,6 +64,7 @@ export interface Product {
   category?: string;
   imageUrl?: string;
   isAvailable: boolean;
+  isHidden: boolean;
   calories?: number;
   protein?: number;
   carbs?: number;

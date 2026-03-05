@@ -71,6 +71,7 @@ public class ProductDto
     public string? Category { get; set; }
     public string? ImageUrl { get; set; }
     public bool IsAvailable { get; set; }
+    public bool IsHidden { get; set; }
     public decimal? Calories { get; set; }
     public decimal? Protein { get; set; }
     public decimal? Carbs { get; set; }

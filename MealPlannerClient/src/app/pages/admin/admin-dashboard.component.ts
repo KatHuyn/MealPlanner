@@ -151,8 +151,10 @@ import { Order, OrderStatus, DashboardStats } from '../../models/models';
           <div class="section-header">
             <h2 class="section-title">📋 Quản lý đơn hàng</h2>
             <div class="filters">
+              <input type="date" [(ngModel)]="startDate" (change)="loadOrders()" title="Từ ngày">
+              <input type="date" [(ngModel)]="endDate" (change)="loadOrders()" title="Đến ngày">
               <select [(ngModel)]="statusFilter" (change)="loadOrders()">
-                <option value="">Tất cả</option>
+                <option value="">Tất cả trạng thái</option>
                 <option value="Pending">Chờ xử lý</option>
                 <option value="Confirmed">Đã xác nhận</option>
                 <option value="Processing">Đang xử lý</option>
@@ -567,8 +569,25 @@ import { Order, OrderStatus, DashboardStats } from '../../models/models';
 
     .filters {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.75rem;      flex-wrap: wrap;
     }
+
+    .filters input[type="date"],
+    .filters select {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background: white;
+      color: #555;
+      cursor: pointer;
+    }
+
+    .filters input[type="date"]:focus,
+    .filters select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);    }
 
     .filters select {
       padding: 0.5rem 1rem;
@@ -781,6 +800,8 @@ export class AdminDashboardComponent implements OnInit {
   stats = signal<DashboardStats | null>(null);
   loading = signal(true);
   statusFilter = '';
+  startDate: string = '';
+  endDate: string = '';
 
   isAdmin = signal(false);
 
@@ -807,11 +828,27 @@ export class AdminDashboardComponent implements OnInit {
 
   loadOrders(): void {
     this.loading.set(true);
-    this.orderService.getAllOrders(1, 50, this.statusFilter || undefined).subscribe({
+    const filters = {
+      status: this.statusFilter || undefined,
+      startDate: this.startDate ? new Date(this.startDate) : undefined,
+      endDate: this.endDate ? new Date(this.endDate) : undefined
+    };
+    this.orderService.getAllOrders(1, 50, filters.status, filters.startDate, filters.endDate).subscribe({
       next: (response: unknown) => {
         const res = response as { success?: boolean; data?: Order[] };
         const orders = res.data ?? (response as Order[]);
-        this.orders.set(orders);
+        // Filter by date range on client if needed
+        const filtered = orders.filter(order => {
+          const orderDate = new Date(order.createdAt);
+          if (this.startDate && orderDate < new Date(this.startDate)) return false;
+          if (this.endDate) {
+            const endDateObj = new Date(this.endDate);
+            endDateObj.setHours(23, 59, 59, 999);
+            if (orderDate > endDateObj) return false;
+          }
+          return true;
+        });
+        this.orders.set(filtered);
         this.loading.set(false);
       },
       error: () => {
