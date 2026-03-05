@@ -91,6 +91,19 @@ public class OrdersController : ControllerBase
     }
 
     /// <summary>
+    /// [Admin] Lấy thống kê dashboard
+    /// </summary>
+    [HttpGet("admin/dashboard-stats")]
+    public async Task<ActionResult<ApiResponse<DashboardStatsDto>>> GetDashboardStats()
+    {
+        if (!IsAdmin())
+            return Forbid();
+
+        var result = await _orderService.GetDashboardStatsAsync();
+        return Ok(result);
+    }
+
+    /// <summary>
     /// [Admin] Lấy tất cả đơn hàng
     /// </summary>
     [HttpGet("admin/all")]

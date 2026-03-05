@@ -53,7 +53,14 @@ interface ChatConversation {
         </div>
 
         <div class="chat-messages" #chatMessages>
-          @if (messages.length === 0) {
+          @if (!hasHealthProfile) {
+            <div class="health-profile-banner">
+              <div class="banner-icon">⚠️</div>
+              <h3>Vui lòng cập nhật hồ sơ sức khỏe</h3>
+              <p>Để nhận thực đơn phù hợp nhất, bạn cần cập nhật thông tin sức khỏe trước khi sử dụng AI Meal Planner.</p>
+              <button class="btn-profile" routerLink="/profile">👤 Cập nhật hồ sơ sức khỏe</button>
+            </div>
+          } @else if (messages.length === 0) {
             <div class="welcome-message">
               <div class="welcome-icon">🍽️</div>
               <h3>Chào mừng đến với MealPlanner AI!</h3>
@@ -148,8 +155,10 @@ interface ChatConversation {
         </div>
 
         <div class="chat-input">
-          <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()" placeholder="Nhập tin nhắn của bạn..." [disabled]="isLoading">
-          <button (click)="sendMessage()" [disabled]="isLoading || !userInput.trim()">{{ isLoading ? '⏳' : '📤' }}</button>
+          <input type="text" [(ngModel)]="userInput" (keyup.enter)="sendMessage()" 
+            [placeholder]="hasHealthProfile ? 'Nhập tin nhắn của bạn...' : 'Vui lòng cập nhật hồ sơ sức khỏe trước...'"
+            [disabled]="isLoading || !hasHealthProfile">
+          <button (click)="sendMessage()" [disabled]="isLoading || !userInput.trim() || !hasHealthProfile">{{ isLoading ? '⏳' : '📤' }}</button>
         </div>
       </div>
     </div>
@@ -232,6 +241,36 @@ interface ChatConversation {
     .chat-header p { margin: 0.5rem 0 0; color: #666; }
 
     .chat-messages { flex: 1; overflow-y: auto; padding: 2rem; }
+
+    .health-profile-banner {
+      text-align: center;
+      padding: 3rem;
+      margin: 2rem;
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      border-radius: 16px;
+      border: 2px solid #ffb74d;
+    }
+
+    .banner-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .health-profile-banner h3 { color: #e65100; margin-bottom: 0.5rem; }
+    .health-profile-banner p { color: #bf360c; margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+    .btn-profile {
+      padding: 0.85rem 2rem;
+      background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-profile:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+    }
 
     .welcome-message { text-align: center; padding: 3rem; }
     .welcome-icon { font-size: 4rem; margin-bottom: 1rem; }
@@ -507,6 +546,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   messages: ChatMsg[] = [];
   userInput = '';
   isLoading = false;
+  hasHealthProfile = false;
 
   // Chat history
   conversations: ChatConversation[] = [];
@@ -527,6 +567,9 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   ) { }
 
   ngOnInit(): void {
+    // Check health profile
+    this.checkHealthProfile();
+
     this.loadConversations();
     // Tạo conversation mới nếu chưa có
     if (this.conversations.length === 0) {
@@ -536,6 +579,25 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       const conv = this.conversations[0];
       this.currentConversationId = conv.id;
       this.messages = [...conv.messages];
+    }
+  }
+
+  private checkHealthProfile(): void {
+    const profile = this.authService.healthProfile;
+    if (profile && (profile.weight || profile.height || profile.healthConditions || profile.allergies)) {
+      this.hasHealthProfile = true;
+    } else {
+      // Try fetching from server
+      this.authService.getHealthProfile().subscribe({
+        next: (p) => {
+          this.hasHealthProfile = !!(p && (p.weight || p.height || p.healthConditions || p.allergies));
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.hasHealthProfile = false;
+          this.cdr.detectChanges();
+        }
+      });
     }
   }
 

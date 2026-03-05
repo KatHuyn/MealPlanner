@@ -198,6 +198,48 @@ public class UpdateOrderStatusRequest
     public string? Reason { get; set; }
 }
 
+// Ingredient management DTOs
+public class SwapIngredientRequest
+{
+    public int ProductId { get; set; }
+    public string ProductName { get; set; } = string.Empty;
+    public decimal Quantity { get; set; }
+    public string Unit { get; set; } = string.Empty;
+}
+
+public class AddIngredientRequest
+{
+    public int ProductId { get; set; }
+    public decimal Quantity { get; set; }
+    public string Unit { get; set; } = string.Empty;
+}
+
+// Dashboard Stats DTOs
+public class DashboardStatsDto
+{
+    public int TotalOrders { get; set; }
+    public int PendingOrders { get; set; }
+    public int ConfirmedOrders { get; set; }
+    public int ProcessingOrders { get; set; }
+    public int ShippingOrders { get; set; }
+    public int DeliveredOrders { get; set; }
+    public int CancelledOrders { get; set; }
+    public decimal TotalRevenue { get; set; }
+    public decimal TodayRevenue { get; set; }
+    public decimal MonthRevenue { get; set; }
+    public int TodayOrders { get; set; }
+    public int MonthOrders { get; set; }
+    public List<TopProductDto> TopProducts { get; set; } = new();
+}
+
+public class TopProductDto
+{
+    public int ProductId { get; set; }
+    public string ProductName { get; set; } = string.Empty;
+    public decimal TotalQuantitySold { get; set; }
+    public decimal TotalRevenue { get; set; }
+}
+
 // API Response
 public class ApiResponse<T>
 {

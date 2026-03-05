@@ -27,10 +27,19 @@ import {
           <button class="btn-cancel" (click)="cancelSwap()">Hủy</button>
         </div>
       }
+      @if (addMode) {
+        <div class="swap-banner" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)">
+          <div class="swap-info">
+            <span class="swap-icon">➕</span>
+            <div>Đang thêm nguyên liệu vào: <strong>{{ addMealName }}</strong></div>
+          </div>
+          <button class="btn-cancel" (click)="cancelAdd()">Hủy</button>
+        </div>
+      }
       
       <div class="products-header">
-        <h1>🛒 {{ swapMode ? 'Chọn nguyên liệu thay thế' : 'Danh sách sản phẩm' }}</h1>
-        <p>{{ swapMode ? 'Chọn nguyên liệu bạn muốn thay thế' : 'Chọn nguyên liệu bạn cần cho bữa ăn' }}</p>
+        <h1>🛒 {{ swapMode ? 'Chọn nguyên liệu thay thế' : addMode ? 'Chọn nguyên liệu để thêm' : 'Danh sách sản phẩm' }}</h1>
+        <p>{{ swapMode ? 'Chọn nguyên liệu bạn muốn thay thế' : addMode ? 'Chọn nguyên liệu bạn muốn thêm vào công thức' : 'Chọn nguyên liệu bạn cần cho bữa ăn' }}</p>
       </div>
 
       <div class="products-filters">
@@ -108,6 +117,10 @@ import {
               @if (swapMode) {
                 <button class="btn-select-swap" [disabled]="!product.isAvailable || product.quantityInStock <= 0" (click)="selectForSwap(product)">
                   {{ product.isAvailable && product.quantityInStock > 0 ? '✅ Chọn nguyên liệu này' : 'Hết hàng' }}
+                </button>
+              } @else if (addMode) {
+                <button class="btn-select-swap" [disabled]="!product.isAvailable || product.quantityInStock <= 0" (click)="selectForAdd(product)">
+                  {{ product.isAvailable && product.quantityInStock > 0 ? '➕ Thêm nguyên liệu này' : 'Hết hàng' }}
                 </button>
               } @else {
                 <button class="btn-add-cart" [disabled]="!product.isAvailable || product.quantityInStock <= 0" (click)="addToCart(product)">
@@ -411,6 +424,12 @@ export class ProductsComponent implements OnInit {
   swapQuantity = 0;
   swapUnit = '';
 
+  // Add mode state
+  addMode = false;
+  addMealPlanId = 0;
+  addMealId = 0;
+  addMealName = '';
+
   ngOnInit(): void {
     // Check for swap mode params
     this.route.queryParams.subscribe(params => {
@@ -422,6 +441,12 @@ export class ProductsComponent implements OnInit {
         this.swapIngredientName = params['ingredientName'] || '';
         this.swapQuantity = +params['quantity'] || 0;
         this.swapUnit = params['unit'] || 'g';
+      }
+      this.addMode = params['addMode'] === 'true';
+      if (this.addMode) {
+        this.addMealPlanId = +params['mealPlanId'] || 0;
+        this.addMealId = +params['mealId'] || 0;
+        this.addMealName = params['mealName'] || '';
       }
     });
     this.loadProducts();
@@ -499,6 +524,26 @@ export class ProductsComponent implements OnInit {
   // Hủy swap và quay về trang meal-plan-detail
   cancelSwap(): void {
     this.router.navigate(['/meal-plans', this.swapMealPlanId]);
+  }
+
+  // Chọn nguyên liệu để thêm vào công thức
+  selectForAdd(product: Product): void {
+    const quantity = this.getQuantity(product);
+    const inputUnit = this.getInputUnit(product);
+    this.router.navigate(['/meal-plans', this.addMealPlanId], {
+      queryParams: {
+        addComplete: true,
+        mealId: this.addMealId,
+        productId: product.id,
+        quantity: quantity,
+        unit: inputUnit
+      }
+    });
+  }
+
+  // Hủy add và quay về trang meal-plan-detail
+  cancelAdd(): void {
+    this.router.navigate(['/meal-plans', this.addMealPlanId]);
   }
 
   // Lấy số lượng đã chọn cho sản phẩm

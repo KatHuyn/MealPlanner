@@ -63,12 +63,22 @@ public class MealPlanService : IMealPlanService
             // 4. Gọi AI để tạo thực đơn
             var aiResponse = await _aiService.GenerateMealPlanAsync(aiRequest);
 
-            if (aiResponse == null || !aiResponse.Meals.Any())
+            if (aiResponse == null)
             {
                 return new ApiResponse<MealPlanDto>
                 {
                     Success = false,
                     Message = "Không thể tạo thực đơn. Vui lòng thử lại."
+                };
+            }
+
+            // AI rejected the request (non-food related or invalid)
+            if (!aiResponse.Meals.Any())
+            {
+                return new ApiResponse<MealPlanDto>
+                {
+                    Success = false,
+                    Message = aiResponse.Message ?? "Yêu cầu không liên quan đến thực đơn. Vui lòng nhập yêu cầu về ăn uống hoặc dinh dưỡng."
                 };
             }
 
@@ -449,6 +459,181 @@ public class MealPlanService : IMealPlanService
             PlanDate = mealPlan.PlanDate,
             Meals = meals,
             TotalCost = totalCost
+        };
+    }
+
+    public async Task<ApiResponse<IngredientDto>> SwapIngredientAsync(int ingredientId, SwapIngredientRequest request)
+    {
+        try
+        {
+            var ingredient = await _context.MealPlanIngredients
+                .Include(i => i.Product)
+                .FirstOrDefaultAsync(i => i.Id == ingredientId);
+
+            if (ingredient == null)
+            {
+                return new ApiResponse<IngredientDto>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy nguyên liệu"
+                };
+            }
+
+            var product = await _context.Products.FindAsync(request.ProductId);
+            if (product == null)
+            {
+                return new ApiResponse<IngredientDto>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy sản phẩm"
+                };
+            }
+
+            ingredient.ProductId = request.ProductId;
+            ingredient.IngredientName = request.ProductName;
+            ingredient.Quantity = request.Quantity;
+            ingredient.Unit = request.Unit;
+            ingredient.IsMatched = true;
+
+            await _context.SaveChangesAsync();
+
+            // Reload product navigation property
+            await _context.Entry(ingredient).Reference(i => i.Product).LoadAsync();
+
+            return new ApiResponse<IngredientDto>
+            {
+                Success = true,
+                Message = "Đã đổi nguyên liệu thành công",
+                Data = MapToIngredientDto(ingredient)
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error swapping ingredient {IngredientId}", ingredientId);
+            return new ApiResponse<IngredientDto>
+            {
+                Success = false,
+                Message = "Có lỗi xảy ra",
+                Errors = new List<string> { ex.Message }
+            };
+        }
+    }
+
+    public async Task<ApiResponse<bool>> DeleteIngredientAsync(int ingredientId)
+    {
+        try
+        {
+            var ingredient = await _context.MealPlanIngredients.FindAsync(ingredientId);
+
+            if (ingredient == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy nguyên liệu"
+                };
+            }
+
+            _context.MealPlanIngredients.Remove(ingredient);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Đã xóa nguyên liệu thành công",
+                Data = true
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting ingredient {IngredientId}", ingredientId);
+            return new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "Có lỗi xảy ra",
+                Errors = new List<string> { ex.Message }
+            };
+        }
+    }
+
+    public async Task<ApiResponse<IngredientDto>> AddIngredientAsync(int mealId, AddIngredientRequest request)
+    {
+        try
+        {
+            var meal = await _context.Meals.FindAsync(mealId);
+            if (meal == null)
+            {
+                return new ApiResponse<IngredientDto>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy bữa ăn"
+                };
+            }
+
+            var product = await _context.Products.FindAsync(request.ProductId);
+            if (product == null)
+            {
+                return new ApiResponse<IngredientDto>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy sản phẩm"
+                };
+            }
+
+            var ingredient = new MealPlanIngredient
+            {
+                MealId = mealId,
+                ProductId = product.Id,
+                IngredientName = product.Name,
+                Quantity = request.Quantity,
+                Unit = request.Unit,
+                IsMatched = true
+            };
+
+            _context.MealPlanIngredients.Add(ingredient);
+            await _context.SaveChangesAsync();
+
+            // Load product navigation
+            await _context.Entry(ingredient).Reference(i => i.Product).LoadAsync();
+
+            return new ApiResponse<IngredientDto>
+            {
+                Success = true,
+                Message = "Đã thêm nguyên liệu thành công",
+                Data = MapToIngredientDto(ingredient)
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error adding ingredient to meal {MealId}", mealId);
+            return new ApiResponse<IngredientDto>
+            {
+                Success = false,
+                Message = "Có lỗi xảy ra",
+                Errors = new List<string> { ex.Message }
+            };
+        }
+    }
+
+    private static IngredientDto MapToIngredientDto(MealPlanIngredient i)
+    {
+        return new IngredientDto
+        {
+            Id = i.Id,
+            IngredientName = i.IngredientName,
+            Quantity = i.Quantity,
+            Unit = i.Unit,
+            Notes = i.Notes,
+            IsMatched = i.IsMatched,
+            Product = i.Product != null ? new ProductDto
+            {
+                Id = i.Product.Id,
+                Name = i.Product.Name,
+                Price = i.Product.Price,
+                Unit = i.Product.Unit,
+                ImageUrl = i.Product.ImageUrl,
+                IsAvailable = i.Product.IsAvailable
+            } : null
         };
     }
 }

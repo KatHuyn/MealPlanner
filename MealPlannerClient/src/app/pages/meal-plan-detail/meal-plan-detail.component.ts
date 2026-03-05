@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MealPlanService, ProductForSwap, SwapSuggestion } from '../../services/meal-plan.service';
 import { CartService } from '../../services/cart.service';
@@ -8,7 +9,7 @@ import { calculateIngredientPrice } from '../../utils/unit-converter';
 
 @Component({
   selector: 'app-meal-plan-detail',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="meal-plan-detail">
@@ -115,6 +116,9 @@ import { calculateIngredientPrice } from '../../utils/unit-converter';
                     </div>
                   }
                 </div>
+                <button class="btn-add-ingredient" (click)="openAddModal(meal)">
+                  ➕ Thêm nguyên liệu
+                </button>
               </div>
             </div>
           }
@@ -559,6 +563,46 @@ import { calculateIngredientPrice } from '../../utils/unit-converter';
       color: white;
     }
 
+    /* Add Ingredient Button */
+    .btn-add-ingredient {
+      margin-top: 0.75rem;
+      padding: 0.5rem 1rem;
+      background: white;
+      border: 2px dashed #27ae60;
+      border-radius: 8px;
+      color: #27ae60;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      width: 100%;
+      transition: all 0.2s;
+    }
+
+    .btn-add-ingredient:hover {
+      background: #27ae60;
+      color: white;
+      border-style: solid;
+    }
+
+    .search-box {
+      margin-bottom: 1rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
     /* Modal Styles */
     .modal-overlay {
       position: fixed;
@@ -806,7 +850,7 @@ export class MealPlanDetailComponent implements OnInit {
     if (id) {
       this.loadMealPlan(+id);
 
-      // Check for swap complete params
+      // Check for swap/add complete params
       this.route.queryParams.subscribe(params => {
         if (params['swapComplete'] === 'true') {
           this.applySwap(
@@ -816,10 +860,18 @@ export class MealPlanDetailComponent implements OnInit {
             params['newProductName'],
             +params['newQuantity'],
             params['newUnit'],
-            params['productUnit'] || 'kg', // Unit gốc của product
+            params['productUnit'] || 'kg',
             +params['newPrice']
           );
-          // Clear query params
+          this.router.navigate([], { queryParams: {}, replaceUrl: true });
+        }
+        if (params['addComplete'] === 'true') {
+          this.applyAdd(
+            +params['mealId'],
+            +params['productId'],
+            +params['quantity'],
+            params['unit']
+          );
           this.router.navigate([], { queryParams: {}, replaceUrl: true });
         }
       });
@@ -829,45 +881,26 @@ export class MealPlanDetailComponent implements OnInit {
     }
   }
 
-  // Apply swap ingredient
+  // Apply swap ingredient - now persists to DB
   applySwap(mealId: number, ingredientId: number, productId: number, productName: string, quantity: number, unit: string, productUnit: string, price: number): void {
     // Wait for meal plan to load first
     setTimeout(() => {
-      const plan = this.mealPlan();
-      if (!plan) return;
-
-      const updatedMeals = plan.meals.map(meal => {
-        if (meal.id === mealId) {
-          return {
-            ...meal,
-            ingredients: meal.ingredients.map(ing => {
-              if (ing.id === ingredientId) {
-                return {
-                  ...ing,
-                  ingredientName: productName,
-                  quantity,
-                  unit,
-                  isMatched: true,
-                  product: {
-                    id: productId,
-                    name: productName,
-                    price,
-                    unit: productUnit, // Unit gốc (kg/lit) cho tính giá
-                    category: '',
-                    isAvailable: true,
-                    quantityInStock: 1000
-                  }
-                };
-              }
-              return ing;
-            })
-          };
+      this.mealPlanService.swapIngredient(ingredientId, {
+        productId,
+        productName,
+        quantity,
+        unit
+      }).subscribe({
+        next: () => {
+          // Reload meal plan from server to get fresh data
+          const plan = this.mealPlan();
+          if (plan) this.loadMealPlan(plan.id);
+          alert(`✅ Đã thay thế nguyên liệu bằng "${productName}"!`);
+        },
+        error: () => {
+          alert('❌ Không thể đổi nguyên liệu. Vui lòng thử lại.');
         }
-        return meal;
       });
-
-      this.mealPlan.set({ ...plan, meals: updatedMeals });
-      alert(`✅ Đã thay thế nguyên liệu bằng "${productName}"!`);
     }, 500);
   }
 
@@ -962,19 +995,25 @@ export class MealPlanDetailComponent implements OnInit {
     const plan = this.mealPlan();
     if (!plan) return;
 
-    // Remove ingredient from meal
-    const updatedMeals = plan.meals.map(m => {
-      if (m.id === meal.id) {
-        return {
-          ...m,
-          ingredients: m.ingredients.filter(ing => ing.id !== ingredient.id)
-        };
+    // Call API to delete from DB, then update local state
+    this.mealPlanService.deleteIngredient(ingredient.id).subscribe({
+      next: () => {
+        const updatedMeals = plan.meals.map(m => {
+          if (m.id === meal.id) {
+            return {
+              ...m,
+              ingredients: m.ingredients.filter(ing => ing.id !== ingredient.id)
+            };
+          }
+          return m;
+        });
+        this.mealPlan.set({ ...plan, meals: updatedMeals });
+        alert(`Đã xóa "${ingredient.ingredientName}" khỏi công thức!`);
+      },
+      error: () => {
+        alert('❌ Không thể xóa nguyên liệu. Vui lòng thử lại.');
       }
-      return m;
     });
-
-    this.mealPlan.set({ ...plan, meals: updatedMeals });
-    alert(`Đã xóa "${ingredient.ingredientName}" khỏi công thức!`);
   }
 
   addToCart(ing: MealPlanIngredient): void {
@@ -1062,37 +1101,63 @@ export class MealPlanDetailComponent implements OnInit {
 
     if (!meal || !ingredient || !plan) return;
 
-    // Update ingredient locally
-    const updatedMeals = plan.meals.map(m => {
-      if (m.id === meal.id) {
-        return {
-          ...m,
-          ingredients: m.ingredients.map(ing => {
-            if (ing.id === ingredient.id) {
-              return {
-                ...ing,
-                ingredientName: suggestion.ingredientName,
-                quantity: suggestion.suggestedQuantity,
-                unit: suggestion.unit,
-                isMatched: suggestion.isAvailable,
-                product: suggestion.isAvailable && suggestion.productId ? {
-                  ...ing.product,
-                  id: suggestion.productId,
-                  name: suggestion.ingredientName,
-                  price: suggestion.price || 0
-                } as any : null
-              };
-            }
-            return ing;
-          })
-        };
-      }
-      return m;
-    });
+    if (!suggestion.isAvailable || !suggestion.productId) {
+      alert('Nguyên liệu này chưa có sẵn trong kho.');
+      return;
+    }
 
-    this.mealPlan.set({ ...plan, meals: updatedMeals });
-    this.closeSwapModal();
-    alert(`Đã đổi ${ingredient.ingredientName} thành ${suggestion.ingredientName}!`);
+    // Call API to persist swap, then update local state
+    this.mealPlanService.swapIngredient(ingredient.id, {
+      productId: suggestion.productId,
+      productName: suggestion.ingredientName,
+      quantity: suggestion.suggestedQuantity,
+      unit: suggestion.unit
+    }).subscribe({
+      next: () => {
+        // Reload from server for fresh data
+        this.loadMealPlan(plan.id);
+        this.closeSwapModal();
+        alert(`Đã đổi ${ingredient.ingredientName} thành ${suggestion.ingredientName}!`);
+      },
+      error: () => {
+        alert('❌ Không thể đổi nguyên liệu. Vui lòng thử lại.');
+      }
+    });
+  }
+
+  // ========== Add Ingredient Methods ==========
+
+  openAddModal(meal: Meal): void {
+    const plan = this.mealPlan();
+    if (!plan) return;
+
+    this.router.navigate(['/products'], {
+      queryParams: {
+        addMode: true,
+        mealPlanId: plan.id,
+        mealId: meal.id,
+        mealName: meal.dishName
+      }
+    });
+  }
+
+  applyAdd(mealId: number, productId: number, quantity: number, unit: string): void {
+    setTimeout(() => {
+      this.mealPlanService.addIngredient(mealId, {
+        productId,
+        quantity,
+        unit
+      }).subscribe({
+        next: () => {
+          const plan = this.mealPlan();
+          if (plan) this.loadMealPlan(plan.id);
+          alert('✅ Đã thêm nguyên liệu vào công thức!');
+        },
+        error: () => {
+          alert('❌ Không thể thêm nguyên liệu. Vui lòng thử lại.');
+        }
+      });
+    }, 500);
   }
 }
 

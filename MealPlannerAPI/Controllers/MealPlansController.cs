@@ -124,6 +124,42 @@ public class MealPlansController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Đổi nguyên liệu
+    /// </summary>
+    [HttpPut("ingredients/{ingredientId}/swap")]
+    public async Task<ActionResult<ApiResponse<IngredientDto>>> SwapIngredient(int ingredientId, [FromBody] SwapIngredientRequest request)
+    {
+        var result = await _mealPlanService.SwapIngredientAsync(ingredientId, request);
+        if (!result.Success)
+            return BadRequest(result);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Xóa nguyên liệu khỏi bữa ăn
+    /// </summary>
+    [HttpDelete("ingredients/{ingredientId}")]
+    public async Task<ActionResult<ApiResponse<bool>>> DeleteIngredient(int ingredientId)
+    {
+        var result = await _mealPlanService.DeleteIngredientAsync(ingredientId);
+        if (!result.Success)
+            return NotFound(result);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Thêm nguyên liệu vào bữa ăn
+    /// </summary>
+    [HttpPost("meals/{mealId}/ingredients")]
+    public async Task<ActionResult<ApiResponse<IngredientDto>>> AddIngredient(int mealId, [FromBody] AddIngredientRequest request)
+    {
+        var result = await _mealPlanService.AddIngredientAsync(mealId, request);
+        if (!result.Success)
+            return BadRequest(result);
+        return Ok(result);
+    }
+
     private int GetUserId()
     {
         var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);

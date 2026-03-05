@@ -92,6 +92,17 @@ public class AIService : IAIService
             return null;
         }
 
+        // Pre-validate: reject non-food-related or gibberish requests
+        if (!IsFoodRelatedRequest(request.UserRequest))
+        {
+            _logger.LogInformation("Request rejected as non-food-related: {Request}", request.UserRequest);
+            return new AIMealPlanResponse
+            {
+                Meals = new(),
+                Message = "Xin lỗi, tôi chỉ có thể hỗ trợ về thực đơn và dinh dưỡng. Bạn có thể hỏi tôi về gợi ý bữa ăn, thực đơn theo sức khỏe, hoặc công thức nấu ăn!"
+            };
+        }
+
         try
         {
             _logger.LogInformation("Using Gemini API");
@@ -102,6 +113,142 @@ public class AIService : IAIService
             _logger.LogError(ex, "Error calling Gemini API");
             return null;
         }
+    }
+
+    private bool IsFoodRelatedRequest(string userRequest)
+    {
+        if (string.IsNullOrWhiteSpace(userRequest))
+            return false;
+
+        var input = userRequest.Trim().ToLower();
+
+        // ========== KIỂM TRA NỘI DUNG KHÔNG PHÙ HỢP ==========
+        // Normalize text trước (@ → a, 0 → o, 1 → l, xóa ký tự đặc biệt...)
+        var normalized = NormalizeText(input);
+
+        // Danh sách từ cấm (dạng đã normalize, không dấu)
+        var inappropriateWords = new[]
+        {
+            // Thô tục tiếng Việt (không dấu sau normalize)
+            "cut", "cuc",
+            "deo", "deu",
+            "dit", "djt",
+            "du ma", "duma",
+            "lon",
+            "buoi",
+            "cac", "cak",
+            "dai",
+            "dcm", "dmm", "vcl", "vl", "cl", "dm",
+            // Tiếng Anh
+            "shit", "fuck", "dick", "porn", "sex",
+            // Chất cấm
+            "chet", "giet",
+            "ma tuy", "matuy",
+            "thuoc lac", "thuoclac",
+            "can sa", "cansa", "can xa", "canxa"
+        };
+
+        if (inappropriateWords.Any(word => normalized.Contains(word)))
+            return false;
+
+        // Reject very short gibberish (e.g., "aaa", "xx", "bb")
+        if (input.Length <= 5)
+        {
+            // Check if it's a recognizable short food keyword
+            var shortFoodWords = new HashSet<string> { "cơm", "phở", "bún", "mì", "chè", "xôi", "cháo", "canh", "gỏi", "nem", "chả", "ăn", "nấu", "bữa" };
+            if (!shortFoodWords.Contains(input))
+            {
+                // Check if all characters are the same (gibberish like "aaa", "xxx")
+                if (input.Distinct().Count() <= 2)
+                    return false;
+            }
+        }
+
+        // Food-related keywords (Vietnamese)
+        var foodKeywords = new[]
+        {
+            // Meal types
+            "bữa", "ăn", "thực đơn", "món", "nấu", "công thức", "nguyên liệu",
+            "sáng", "trưa", "tối", "ăn sáng", "ăn trưa", "ăn tối", "bữa phụ",
+            // Food categories  
+            "cơm", "phở", "bún", "mì", "cháo", "súp", "canh", "salad", "gỏi",
+            "thịt", "cá", "gà", "bò", "heo", "tôm", "trứng", "rau", "củ", "quả",
+            "xôi", "chè", "bánh", "lẩu", "nướng", "chiên", "hấp", "luộc", "kho",
+            // Health & nutrition
+            "dinh dưỡng", "protein", "calo", "giảm cân", "tăng cân", "tăng cơ", "gym",
+            "tiểu đường", "huyết áp", "dạ dày", "cảm", "ốm", "sốt", "bệnh",
+            "sức khỏe", "dị ứng", "diet", "healthy", "vitamin",
+            "nhiệt miệng", "viêm họng", "ho", "ngộ độc", "mề đay", "gout",
+            // Actions
+            "gợi ý", "đề xuất", "tạo", "cho tôi", "giúp", "muốn ăn", "thèm",
+            "nấu gì", "ăn gì", "menu", "meal", "plan"
+        };
+
+        return foodKeywords.Any(keyword => input.Contains(keyword));
+    }
+
+    /// <summary>
+    /// Normalize text để chống bypass filter bằng ký tự đặc biệt
+    /// Xử lý: leet-speak, dấu tiếng Việt, ký tự phân cách
+    /// Ví dụ: "c@n x@" → "can xa", "cứt" → "cut", "l.o.n" → "lon"
+    /// </summary>
+    private static string NormalizeText(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return "";
+
+        var sb = new StringBuilder(input.Length);
+
+        foreach (var ch in input)
+        {
+            var mapped = char.ToLower(ch) switch
+            {
+                // Leet-speak substitutions
+                '@' => 'a',
+                '0' => 'o',
+                '1' => 'l',
+                '!' => 'i',
+                '3' => 'e',
+                '$' => 's',
+                '5' => 's',
+                '7' => 't',
+                '4' => 'a',
+                '8' => 'b',
+                '9' => 'g',
+
+                // Vietnamese diacritics → base letter
+                // a variants
+                'á' or 'à' or 'ả' or 'ã' or 'ạ' => 'a',
+                'ă' or 'ắ' or 'ằ' or 'ẳ' or 'ẵ' or 'ặ' => 'a',
+                'â' or 'ấ' or 'ầ' or 'ẩ' or 'ẫ' or 'ậ' => 'a',
+                // e variants
+                'é' or 'è' or 'ẻ' or 'ẽ' or 'ẹ' => 'e',
+                'ê' or 'ế' or 'ề' or 'ể' or 'ễ' or 'ệ' => 'e',
+                // i variants
+                'í' or 'ì' or 'ỉ' or 'ĩ' or 'ị' => 'i',
+                // o variants
+                'ó' or 'ò' or 'ỏ' or 'õ' or 'ọ' => 'o',
+                'ô' or 'ố' or 'ồ' or 'ổ' or 'ỗ' or 'ộ' => 'o',
+                'ơ' or 'ớ' or 'ờ' or 'ở' or 'ỡ' or 'ợ' => 'o',
+                // u variants
+                'ú' or 'ù' or 'ủ' or 'ũ' or 'ụ' => 'u',
+                'ư' or 'ứ' or 'ừ' or 'ử' or 'ữ' or 'ự' => 'u',
+                // y variants
+                'ý' or 'ỳ' or 'ỷ' or 'ỹ' or 'ỵ' => 'y',
+                // đ → d
+                'đ' => 'd',
+
+                // Bỏ qua ký tự phân cách (., -, _, *, ~) dùng để chèn giữa chữ
+                '.' or '-' or '_' or '*' or '~' or '|' => '\0',
+
+                // Giữ nguyên ký tự thường
+                var c => c
+            };
+
+            if (mapped != '\0')
+                sb.Append(mapped);
+        }
+
+        return sb.ToString();
     }
 
     private async Task<AIMealPlanResponse?> CallGeminiApiAsync(AIMealPlanRequest request, string apiKey)
@@ -116,6 +263,12 @@ public class AIService : IAIService
 🎯 NHIỆM VỤ CHÍNH:
 Tạo thực đơn ĐỘC ĐÁO, SÁNG TẠO và PHÙ HỢP với yêu cầu của người dùng.
 Mỗi lần tạo thực đơn phải KHÁC NHAU, không lặp lại công thức cũ.
+
+🚫 XỬ LÝ YÊU CẦU KHÔNG LIÊN QUAN:
+- Nếu yêu cầu KHÔNG liên quan đến ẩm thực, dinh dưỡng, thực đơn, nấu ăn, sức khỏe ăn uống
+- KHÔNG tạo thực đơn, trả về JSON:
+  {""meals"": [], ""message"": ""Xin lỗi, tôi chỉ có thể hỗ trợ về thực đơn và dinh dưỡng. Bạn có muốn tôi gợi ý thực đơn phù hợp không?""}
+- Ví dụ yêu cầu KHÔNG liên quan: sửa xe, thời tiết, chính trị, công nghệ, giải trí...
 
 ⚠️ QUY TẮC BẮT BUỘC VỀ NGUYÊN LIỆU:
 1. CHỈ ĐƯỢC sử dụng nguyên liệu từ DANH SÁCH CÓ SẴN được cung cấp bên dưới
@@ -138,15 +291,29 @@ Mỗi lần tạo thực đơn phải KHÁC NHAU, không lặp lại công thứ
    - Nước mắm: ""quantity"": 30, ""unit"": ""ml"" (KHÔNG DÙNG ""muỗng canh"")
    - Mật ong: ""quantity"": 15, ""unit"": ""ml"" (KHÔNG DÙNG ""g"")
 
-🧠 HIỂU NGỮ CẢNH NGƯỜI DÙNG:
-- 'lạnh', 'rét', 'trời lạnh' → Món ấm nóng: phở, cháo, lẩu, canh gừng
-- 'nóng', 'trời nóng', 'nắng' → Món mát: gỏi cuốn, bún trộn, salad
-- 'buồn', 'mệt', 'stress', 'chán' → Comfort food ấm áp: xôi, cháo gà, bún riêu
-- 'ốm', 'cảm', 'sốt', 'bệnh' → Món dễ tiêu, bổ dưỡng: cháo, súp, canh
-- 'tăng cơ', 'gym', 'protein' → Món giàu protein: ức gà, thịt bò, trứng, cá
-- 'giảm cân', 'diet' → Món ít calo: salad, rau luộc, cá hấp
-- 'tiểu đường' → Món ít đường, ít tinh bột
-- 'cao huyết áp' → Món ít muối
+🏥 QUY TẮC VỀ TÌNH TRẠNG SỨC KHỎE:
+
+🔴 NGUYÊN TẮC ƯU TIÊN:
+1. YÊU CẦU CỤ THỂ CỦA NGƯỜI DÙNG LÀ TRÊN HẾT. Nếu người dùng yêu cầu một loại món cụ thể (ví dụ: ""cơm"", ""bún"", ""phở""), PHẢI tạo thực đơn với ĐÚNG loại món đó.
+2. Tình trạng sức khỏe chỉ ảnh hưởng đến: CÁCH CHẾ BIẾN, GIA VỊ, và NGUYÊN LIỆU ĐI KÈM (không thay đổi món chính).
+3. Ví dụ: Người bị đau dạ dày muốn ăn CƠM → Vẫn cho ăn CƠM, nhưng kèm món nhẹ nhàng (thịt hấp, rau luộc), KHÔNG kèm đồ cay/chua/chiên.
+4. Cột ""NÊN"" chỉ áp dụng khi người dùng KHÔNG yêu cầu cụ thể món gì.
+
+Khi người dùng ĐỀ CẬP tình trạng sức khỏe (trong tin nhắn HOẶC trong hồ sơ sức khỏe), áp dụng quy tắc:
+
+| Tình trạng | NÊN (gợi ý nếu không yêu cầu cụ thể) | CẤM (tuyệt đối không) |
+| Cảm, Sốt, Mệt mỏi | Đồ ấm, lỏng, dễ tiêu: cháo, súp, canh | Salad lạnh, đồ sống, nước đá |
+| Đau dạ dày, Tiêu hóa | Cháo trắng, cơm mềm, thịt hấp, rau luộc | Đồ cay, chua, dầu mỡ nhiều, cà phê, sữa |
+| Ho, Viêm họng | Nước ấm, mật ong, thực phẩm mềm/nhuyễn | Đồ chiên giòn, đồ lạnh, món quá ngọt |
+| Ngộ độc thực phẩm | Cháo loãng, thức ăn nhẹ | Rau sống, gỏi, trái cây tươi |
+| Huyết áp cao | Rau xanh, ngũ cốc, thực phẩm nhạt ít muối | Đồ đóng hộp, dưa muối, mỡ động vật |
+| Nhiệt miệng, Nóng trong | Đồ luộc, thanh đạm, rau má | Đồ chiên, ớt, tiêu, trái cây nóng (vải, mít) |
+| Dị ứng, Mề đay | Thực phẩm tự nhiên, lành tính | Hải sản, thực phẩm có phẩm màu/phụ gia |
+
+⚠️ QUAN TRỌNG: 
+- Với BẤT KỲ tình trạng sức khỏe nào khác chưa liệt kê: phân tích → xác định thực phẩm nên tránh → ưu tiên món dễ tiêu, giàu dinh dưỡng
+- Ghi rõ trong description TẠI SAO món ăn phù hợp với tình trạng sức khỏe đó
+- PHẢI đọc kỹ thông tin hồ sơ sức khỏe (dị ứng, tình trạng bệnh, sở thích ăn) và ÁP DỤNG vào thực đơn
 
 📋 FORMAT JSON BẮT BUỘC (không thêm text khác):
 {
@@ -155,7 +322,7 @@ Mỗi lần tạo thực đơn phải KHÁC NHAU, không lặp lại công thứ
             ""mealType"": ""Breakfast"" hoặc ""Lunch"" hoặc ""Dinner"",
             ""dishName"": ""Tên món ăn sáng tạo"",
             ""recipe"": ""Công thức nấu chi tiết từng bước"",
-            ""description"": ""Mô tả món ăn và lý do phù hợp với yêu cầu người dùng"",
+            ""description"": ""Mô tả món ăn và lý do phù hợp với yêu cầu/tình trạng sức khỏe người dùng"",
             ""prepTime"": 10,
             ""cookTime"": 20,
             ""servings"": 2,
@@ -168,7 +335,8 @@ Mỗi lần tạo thực đơn phải KHÁC NHAU, không lặp lại công thứ
                 }
             ]
         }
-    ]
+    ],
+    ""message"": null
 }";
 
         var requestBody = new

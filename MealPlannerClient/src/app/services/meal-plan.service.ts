@@ -104,6 +104,32 @@ export class MealPlanService {
       map(response => response.data || [])
     );
   }
+
+  swapIngredient(ingredientId: number, request: { productId: number; productName: string; quantity: number; unit: string }): Observable<any> {
+    return this.http.put<ApiResponse<any>>(`${this.apiUrl}/ingredients/${ingredientId}/swap`, request).pipe(
+      map(response => {
+        if (!response.success) throw new Error(response.message);
+        return response.data;
+      })
+    );
+  }
+
+  deleteIngredient(ingredientId: number): Observable<void> {
+    return this.http.delete<ApiResponse<boolean>>(`${this.apiUrl}/ingredients/${ingredientId}`).pipe(
+      map(response => {
+        if (!response.success) throw new Error(response.message);
+      })
+    );
+  }
+
+  addIngredient(mealId: number, request: { productId: number; quantity: number; unit: string }): Observable<any> {
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/meals/${mealId}/ingredients`, request).pipe(
+      map(response => {
+        if (!response.success) throw new Error(response.message);
+        return response.data;
+      })
+    );
+  }
 }
 
 // Product for swap (simple)

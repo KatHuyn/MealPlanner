@@ -68,6 +68,7 @@ public class AIMealPlanRequest
 public class AIMealPlanResponse
 {
     public List<AIMealResponse> Meals { get; set; } = new();
+    public string? Message { get; set; }
 }
 
 public class AIMealResponse

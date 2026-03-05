@@ -228,3 +228,27 @@ export interface CartItem {
   product: Product;
   quantity: number;
 }
+
+// Dashboard Stats
+export interface DashboardStats {
+  totalOrders: number;
+  pendingOrders: number;
+  confirmedOrders: number;
+  processingOrders: number;
+  shippingOrders: number;
+  deliveredOrders: number;
+  cancelledOrders: number;
+  totalRevenue: number;
+  todayRevenue: number;
+  monthRevenue: number;
+  todayOrders: number;
+  monthOrders: number;
+  topProducts: TopProduct[];
+}
+
+export interface TopProduct {
+  productId: number;
+  productName: string;
+  totalQuantitySold: number;
+  totalRevenue: number;
+}

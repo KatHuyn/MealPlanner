@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Order, CreateOrderRequest, ApiResponse } from '../models/models';
+import { Order, CreateOrderRequest, ApiResponse, DashboardStats } from '../models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +62,12 @@ export class OrderService {
 
   updateOrderStatus(orderId: number, status: string, reason?: string): Observable<Order> {
     return this.http.put<ApiResponse<Order>>(`${this.apiUrl}/${orderId}/status`, { status, reason }).pipe(
+      map(response => response.data!)
+    );
+  }
+
+  getDashboardStats(): Observable<DashboardStats> {
+    return this.http.get<ApiResponse<DashboardStats>>(`${this.apiUrl}/admin/dashboard-stats`).pipe(
       map(response => response.data!)
     );
   }

@@ -46,7 +46,7 @@ import { Order, OrderStatus, PaymentStatus } from '../../models/models';
                   </span>
                 </div>
                 <div class="order-total">
-                  <span class="value">{{ order.totalAmount | number }} đ</span>
+                  <span class="value">{{ (order.finalAmount || order.totalAmount) | number }} đ</span>
                 </div>
                 <span class="expand-icon">{{ expandedOrders.has(order.id) ? '▲' : '▼' }}</span>
               </div>
@@ -91,9 +91,15 @@ import { Order, OrderStatus, PaymentStatus } from '../../models/models';
                         </div>
                       }
                     </div>
+                    @if (order.shippingFee) {
+                      <div class="items-shipping">
+                        <span>Phí giao hàng:</span>
+                        <span>{{ order.shippingFee | number }} đ</span>
+                      </div>
+                    }
                     <div class="items-total">
                       <span>Tổng cộng:</span>
-                      <span>{{ order.totalAmount | number }} đ</span>
+                      <span>{{ (order.finalAmount || order.totalAmount) | number }} đ</span>
                     </div>
                   </div>
 
@@ -236,6 +242,15 @@ import { Order, OrderStatus, PaymentStatus } from '../../models/models';
     .item-name { flex: 1; }
     .item-qty { width: 60px; text-align: center; color: #666; }
     .item-price { width: 120px; text-align: right; font-weight: 600; }
+
+    .items-shipping {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      color: #888;
+      font-size: 0.9rem;
+      border-top: 1px solid #eee;
+    }
 
     .items-total {
       display: flex;

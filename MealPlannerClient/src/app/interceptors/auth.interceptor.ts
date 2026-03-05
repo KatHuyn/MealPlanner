@@ -41,13 +41,15 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   const router = inject(Router);
   const token = authService.getToken();
 
+  const headers: Record<string, string> = {
+    'ngrok-skip-browser-warning': 'true'
+  };
+
   if (token) {
-    req = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    headers['Authorization'] = `Bearer ${token}`;
   }
+
+  req = req.clone({ setHeaders: headers });
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {

@@ -11,4 +11,5 @@ public interface IOrderService
     Task<ApiResponse<List<OrderDto>>> GetAllOrdersAsync(int page = 1, int pageSize = 20, string? status = null); // Admin
     Task<ApiResponse<OrderDto>> UpdateOrderStatusAsync(int orderId, UpdateOrderStatusRequest request);
     Task<ApiResponse<bool>> CancelOrderAsync(int orderId, string reason);
+    Task<ApiResponse<DashboardStatsDto>> GetDashboardStatsAsync();
 }

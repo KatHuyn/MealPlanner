@@ -107,7 +107,7 @@ import { calculateIngredientPrice } from '../../utils/unit-converter';
                 @for (item of cartItems; track item.product.id) {
                   <div class="cart-preview-item">
                     <span>{{ item.product.name }}</span>
-                    <span>x{{ item.quantity }}</span>
+                    <span>{{ item.quantity }}{{ getInputUnit(item.product) }}</span>
                     <span>{{ calculateCartItemPrice(item) | number }} đ</span>
                   </div>
                 }
@@ -372,7 +372,7 @@ export class CheckoutComponent implements OnInit {
   notes = '';
   paymentMethod = 'COD'; // COD or BankTransfer
 
-  shippingFee = 25000;
+  shippingFee = 30000; // Khớp với backend CalculateShippingFee: 30,000đ cho đơn < 500,000đ
   loading = false;
   error = '';
 
@@ -461,6 +461,13 @@ export class CheckoutComponent implements OnInit {
     );
   }
 
+  getInputUnit(product: { unit?: string }): string {
+    const unit = (product.unit || 'kg').toLowerCase();
+    if (unit === 'kg' || unit === 'kilogram') return 'g';
+    if (unit === 'l' || unit === 'lít' || unit === 'liter') return 'ml';
+    return unit;
+  }
+
   isFormValid(): boolean {
     return !!(this.receiverName && this.receiverPhone && this.shippingAddress &&
       (this.mealPlan || this.cartItems.length > 0));
@@ -483,8 +490,9 @@ export class CheckoutComponent implements OnInit {
       }).subscribe({
         next: (order) => {
           console.log('[Checkout] Order created successfully:', order);
-          this.cartService.clearCart(); // Clear cart after meal plan order too
-          this.router.navigate(['/orders']); // Go to orders list
+          this.loading = false;
+          this.cartService.clearCart();
+          this.router.navigate(['/orders']);
         },
         error: (err) => {
           console.error('[Checkout] Order creation failed:', err);
@@ -509,8 +517,9 @@ export class CheckoutComponent implements OnInit {
       }).subscribe({
         next: (order) => {
           console.log('[Checkout] Cart order created successfully:', order);
+          this.loading = false;
           this.cartService.clearCart();
-          this.router.navigate(['/orders']); // Go to orders list
+          this.router.navigate(['/orders']);
         },
         error: (err) => {
           console.error('[Checkout] Cart order creation failed:', err);

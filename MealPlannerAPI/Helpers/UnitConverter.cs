@@ -69,6 +69,28 @@ public static class UnitConverter
     }
 
     /// <summary>
+    /// Chuyển đổi số lượng từ đơn vị đặt hàng sang đơn vị kho (product stock unit).
+    /// Ví dụ: 200g → 0.2kg, 500ml → 0.5L
+    /// Dùng để so sánh và trừ tồn kho chính xác.
+    /// </summary>
+    public static decimal ConvertToStockUnit(decimal quantity, string? orderUnit, string? stockUnit)
+    {
+        var ordUnit = (orderUnit ?? "").ToLower().Trim();
+        var stUnit = (stockUnit ?? "kg").ToLower().Trim();
+
+        // gram → kg
+        if (IsGramUnit(ordUnit) && IsKilogramUnit(stUnit))
+            return quantity / 1000m;
+
+        // ml → lít
+        if (IsMilliliterUnit(ordUnit) && IsLiterUnit(stUnit))
+            return quantity / 1000m;
+
+        // Cùng đơn vị hoặc không cần chuyển đổi
+        return quantity;
+    }
+
+    /// <summary>
     /// Kiểm tra đơn vị có phải gram không
     /// </summary>
     public static bool IsGramUnit(string unit)

@@ -81,6 +81,13 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "allowedHosts": [
+              "localhost",
+              "127.0.0.1",
+              "karlene-pseudodiphtherial-unsmokily.ngrok-free.dev"
+            ]
+          },
           "configurations": {
             "production": {
               "buildTarget": "MealPlannerClient2:build:production"

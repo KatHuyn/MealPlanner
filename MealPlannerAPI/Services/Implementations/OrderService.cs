@@ -57,7 +57,11 @@ public class OrderService : IOrderService
                     };
                 }
 
-                if (!product.IsAvailable || product.QuantityInStock < item.Quantity)
+                // Chuyển đổi số lượng đặt hàng (grams) sang đơn vị tồn kho (kg) trước khi so sánh
+                var quantityInStockUnit = Helpers.UnitConverter.ConvertToStockUnit(
+                    item.Quantity, "g", product.Unit);
+
+                if (!product.IsAvailable || product.QuantityInStock < quantityInStockUnit)
                 {
                     return new ApiResponse<OrderDto>
                     {
@@ -71,7 +75,12 @@ public class OrderService : IOrderService
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
                     UnitPrice = product.Price,
-                    TotalPrice = product.Price * item.Quantity
+                    TotalPrice = Helpers.UnitConverter.CalculatePrice(
+                        product.Price,
+                        product.Unit,
+                        item.Quantity,
+                        "g" // Cart items luôn gửi số lượng theo gram
+                    )
                 };
 
                 order.OrderItems.Add(orderItem);
@@ -416,6 +425,109 @@ public class OrderService : IOrderService
             Data = result.Success,
             Errors = result.Errors
         };
+    }
+
+    public async Task<ApiResponse<DashboardStatsDto>> GetDashboardStatsAsync()
+    {
+        try
+        {
+            // Convert UTC to Vietnam timezone (UTC+7)
+            var vietnamTz = TimeZoneInfo.CreateCustomTimeZone("Vietnam Standard Time", TimeSpan.FromHours(7), "Vietnam Standard Time", "Vietnam Standard Time");
+            var vietnamNow = TimeZoneInfo.ConvertTime(DateTime.UtcNow, vietnamTz);
+            var today = vietnamNow.Date;
+            var monthStart = new DateTime(today.Year, today.Month, 1);
+
+            _logger.LogInformation($"Dashboard Stats - UTC Now: {DateTime.UtcNow}, Vietnam Now: {vietnamNow}, Today: {today}");
+
+            var orders = await _context.Orders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                .ToListAsync();
+
+            var deliveredOrders = orders.Where(o => o.Status == OrderStatus.Delivered).ToList();
+
+            // Count today's orders: COD uses DeliveredAt, others use CreatedAt
+            var todayOrders = orders.Count(o =>
+            {
+                if (o.PaymentMethod == "COD")
+                {
+                    // COD: count by delivery date
+                    return o.DeliveredAt.HasValue && TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date == today;
+                }
+                else
+                {
+                    // Prepaid (BankTransfer, etc): count by order creation date
+                    return TimeZoneInfo.ConvertTime(o.CreatedAt, vietnamTz).Date == today;
+                }
+            });
+
+            // Count month's orders: COD uses DeliveredAt, others use CreatedAt
+            var monthOrders = orders.Count(o =>
+            {
+                if (o.PaymentMethod == "COD")
+                {
+                    // COD: count by delivery date
+                    return o.DeliveredAt.HasValue && TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date >= monthStart;
+                }
+                else
+                {
+                    // Prepaid: count by order creation date
+                    return TimeZoneInfo.ConvertTime(o.CreatedAt, vietnamTz).Date >= monthStart;
+                }
+            });
+
+            var stats = new DashboardStatsDto
+            {
+                TotalOrders = orders.Count,
+                PendingOrders = orders.Count(o => o.Status == OrderStatus.Pending),
+                ConfirmedOrders = orders.Count(o => o.Status == OrderStatus.Confirmed),
+                ProcessingOrders = orders.Count(o => o.Status == OrderStatus.Processing),
+                ShippingOrders = orders.Count(o => o.Status == OrderStatus.Shipping),
+                DeliveredOrders = orders.Count(o => o.Status == OrderStatus.Delivered),
+                CancelledOrders = orders.Count(o => o.Status == OrderStatus.Cancelled),
+
+                TotalRevenue = deliveredOrders.Sum(o => o.FinalAmount),
+                TodayRevenue = deliveredOrders
+                    .Where(o => o.DeliveredAt.HasValue && TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date == today)
+                    .Sum(o => o.FinalAmount),
+                MonthRevenue = deliveredOrders
+                    .Where(o => o.DeliveredAt.HasValue && TimeZoneInfo.ConvertTime(o.DeliveredAt.Value, vietnamTz).Date >= monthStart)
+                    .Sum(o => o.FinalAmount),
+
+                TodayOrders = todayOrders,
+                MonthOrders = monthOrders,
+
+                TopProducts = deliveredOrders
+                    .SelectMany(o => o.OrderItems)
+                    .GroupBy(oi => new { oi.ProductId, ProductName = oi.Product?.Name ?? "Unknown" })
+                    .Select(g => new TopProductDto
+                    {
+                        ProductId = g.Key.ProductId,
+                        ProductName = g.Key.ProductName,
+                        TotalQuantitySold = g.Count(),  // Number of times sold (count of orders), not total units
+                        TotalRevenue = g.Sum(oi => oi.TotalPrice)
+                    })
+                    .OrderByDescending(p => p.TotalQuantitySold)
+                    .Take(5)
+                    .ToList()
+            };
+
+            return new ApiResponse<DashboardStatsDto>
+            {
+                Success = true,
+                Data = stats
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting dashboard stats");
+            return new ApiResponse<DashboardStatsDto>
+            {
+                Success = false,
+                Message = "Có lỗi xảy ra khi lấy thống kê",
+                Errors = new List<string> { ex.Message }
+            };
+        }
     }
 
     private static string GenerateOrderCode()

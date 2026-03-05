@@ -42,8 +42,7 @@ import { CartService } from '../../services/cart.service';
             <div class="dropdown">
               <a routerLink="/profile">Hồ sơ sức khỏe</a>
               @if (authService.currentUser?.isAdmin) {
-                <a routerLink="/admin/products">📦 Quản lý sản phẩm</a>
-                <a routerLink="/admin">📊 Quản lý đơn hàng</a>
+                <a routerLink="/admin">📊 Dashboard</a>
               }
               <a (click)="logout()">Đăng xuất</a>
             </div>
